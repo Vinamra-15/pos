@@ -19,22 +19,21 @@ public class BrandService {
 
 	@Transactional(rollbackOn = ApiException.class)
 	public void add(BrandPojo p) throws ApiException {
-		normalize(p);
-		if(StringUtil.isEmpty(p.getName())) {
-			throw new ApiException("name cannot be empty");
-		}
-
+//		normalize(p);
+//		if(StringUtil.isEmpty(p.getName())||StringUtil.isEmpty(p.getCategory())) {
+//			throw new ApiException("Field(s) cannot be empty");
+//		}
 		if(dao.checkBrandCatDuplicateExists(p.getName(),p.getCategory())){
-			throw new ApiException("brand-category already exists.");
+			throw new ApiException("Brand: " + p.getName() + " in the category: " + p.getCategory() + " already exists.");
 		}
 
 		dao.insert(p);
 	}
 
-	@Transactional
-	public void delete(int id) {
-		dao.delete(id);
-	}
+//	@Transactional
+//	public void delete(int id) {
+//		dao.delete(id);
+//	}
 
 	@Transactional(rollbackOn = ApiException.class)
 	public BrandPojo get(int id) throws ApiException {
@@ -48,10 +47,14 @@ public class BrandService {
 
 	@Transactional(rollbackOn  = ApiException.class)
 	public void update(int id, BrandPojo p) throws ApiException {
-		normalize(p);
+		if(dao.checkBrandCatDuplicateExists(p.getName(),p.getCategory())){
+			throw new ApiException("Brand: " + p.getName() + " in the category: " + p.getCategory() + " already exists.");
+		}
 		BrandPojo ex = getCheck(id);
 		ex.setCategory(p.getCategory());
 		ex.setName(p.getName());
+
+
 		dao.update(ex);
 	}
 
@@ -59,12 +62,21 @@ public class BrandService {
 	public BrandPojo getCheck(int id) throws ApiException {
 		BrandPojo p = dao.select(id);
 		if (p == null) {
-			throw new ApiException("Employee with given ID does not exit, id: " + id);
+			throw new ApiException("Brand with given ID does not exist, id: " + id);
 		}
 		return p;
 	}
 
-	protected static void normalize(BrandPojo p) {
-		p.setName(StringUtil.toLowerCase(p.getName()));
+	@Transactional
+	public BrandPojo getCheckWithBrandCategory(String name, String category) throws ApiException{
+		BrandPojo p = dao.select(name,category);
+		if (p == null) {
+			throw new ApiException("Brand with name: " + name + " and category: " + category+" does not exist!");
+		}
+		return p;
 	}
+
+//	protected static void normalize(BrandPojo p) {
+//		p.setName(StringUtil.toLowerCase(p.getName()));
+//	}
 }
