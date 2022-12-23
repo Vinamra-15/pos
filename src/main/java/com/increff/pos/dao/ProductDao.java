@@ -51,7 +51,11 @@ public class ProductDao extends AbstractDao {
     public boolean checkProductDuplicateExists(int id, String barcode){
         TypedQuery<ProductPojo> query = getQuery(check_Product_duplicate,ProductPojo.class);
         query.setParameter("barcode",barcode);
-        return id != getSingle(query).getId();
+        ProductPojo pojo = getSingle(query);
+        if(pojo==null)
+            return false;
+
+        return id != pojo.getId();
     }
 
     public boolean checkProductDuplicateExists(String barcode){

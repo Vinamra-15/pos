@@ -25,8 +25,11 @@ public class ProductDto {
     public void add(ProductForm form) throws ApiException {
         normalize(form);
         validate(form);
+
         ProductPojo p = convert(form);
+
         productService.add(p);
+
     }
 
     public ProductData get(int id) throws ApiException {
@@ -46,10 +49,19 @@ public class ProductDto {
     }
 
     public void update(int id, ProductForm form) throws ApiException {
-        normalize(form);
-        validate(form);
-        ProductPojo p = convert(form);
-        productService.update(id, p);
+        try{
+
+            normalize(form);
+            validate(form);
+            ProductPojo p = convert(form);
+            productService.update(id, p);
+
+        }
+        catch (Exception e)
+        {
+            throw new ApiException(e.toString());
+        }
+
     }
 
 
