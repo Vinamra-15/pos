@@ -148,7 +148,6 @@ function displayProductList(data){
 		//var buttonHtml = '<button onclick="deleteProduct(' + e.id + ')">delete</button>'
 		var buttonHtml = ' <button onclick="displayEditProduct(' + e.id + ')">edit</button>'
 		var row = '<tr>'
-		+ '<td>' + e.id + '</td>'
 		+ '<td>' + e.barcode + '</td>'
 		+ '<td>' + e.name + '</td>'
 		+ '<td>' + e.brandName + '</td>'

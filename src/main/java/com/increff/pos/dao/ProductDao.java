@@ -16,7 +16,7 @@ public class ProductDao extends AbstractDao {
     private static String select_id = "select p from ProductPojo p where id=:id";
     private static String select_all = "select p from ProductPojo p";
 
-    private static String check_Product_duplicate = "select p from ProductPojo p where barcode=:barcode";
+    private static String select_barcode = "select p from ProductPojo p where barcode=:barcode";
 
     @PersistenceContext
     private EntityManager em;
@@ -48,17 +48,20 @@ public class ProductDao extends AbstractDao {
 
     }
 
-    public boolean checkProductDuplicateExists(int id, String barcode){
-        TypedQuery<ProductPojo> query = getQuery(check_Product_duplicate,ProductPojo.class);
+    public ProductPojo selectByBarcode(String barcode){
+        TypedQuery<ProductPojo> query = getQuery(select_barcode,ProductPojo.class);
         query.setParameter("barcode",barcode);
-        return id != getSingle(query).getId();
+        return getSingle(query);
     }
 
-    public boolean checkProductDuplicateExists(String barcode){
-        TypedQuery<ProductPojo> query = getQuery(check_Product_duplicate,ProductPojo.class);
-        query.setParameter("barcode",barcode);
+    public boolean checkProductDuplicateExists(int id, String barcode){  //check for editing
+        ProductPojo productPojo = selectByBarcode(barcode);
+        return id != productPojo.getId();
+    }
 
-        if(getSingle(query)!=null)
+    public boolean checkProductDuplicateExists(String barcode){ //check for adding
+        ProductPojo productPojo = selectByBarcode(barcode);
+        if(productPojo!=null)
             return true;
         return false;
     }

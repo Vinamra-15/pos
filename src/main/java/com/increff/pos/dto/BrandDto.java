@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -38,6 +39,7 @@ public class BrandDto {
         for (BrandPojo p : list) {
             list2.add(convert(p));
         }
+        Collections.reverse(list2);
         return list2;
     }
 

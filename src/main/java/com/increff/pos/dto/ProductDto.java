@@ -2,15 +2,20 @@ package com.increff.pos.dto;
 
 import com.increff.pos.model.ProductData;
 import com.increff.pos.model.ProductForm;
+import com.increff.pos.pojo.InventoryPojo;
 import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.service.ApiException;
 import com.increff.pos.service.BrandService;
+import com.increff.pos.service.InventoryService;
 import com.increff.pos.service.ProductService;
 import com.increff.pos.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.RollbackException;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -22,34 +27,50 @@ public class ProductDto {
     @Autowired
     private BrandService brandService;
 
+    @Autowired
+    private InventoryService inventoryService;
+
+
+//    @Transactional(rollbackOn = ApiException.class)
     public void add(ProductForm form) throws ApiException {
         normalize(form);
         validate(form);
-        ProductPojo p = convert(form);
-        productService.add(p);
+        ProductPojo productPojo = convert(form);
+        productService.add(productPojo);
+
+        //error induce
+
+        InventoryPojo inventoryPojo = new InventoryPojo();
+        inventoryPojo.setProductId(productPojo.getId());
+        inventoryPojo.setQuantity(0);
+        inventoryService.add(inventoryPojo);
+
+
+
     }
 
     public ProductData get(int id) throws ApiException {
-        ProductPojo p = productService.get(id);
-        return convert(p);
+        ProductPojo productPojo = productService.get(id);
+        return convert(productPojo);
     }
 
     public List<ProductData> getAll() throws ApiException {
         List<ProductPojo> list = productService.getAll();
         List<ProductData> list2 = new ArrayList<ProductData>();
-        for (ProductPojo p : list) {
-            list2.add(convert(p));
+        for (ProductPojo productPojo : list) {
+            list2.add(convert(productPojo));
 
         }
-
+        Collections.reverse(list2);
         return list2;
+
     }
 
     public void update(int id, ProductForm form) throws ApiException {
         normalize(form);
         validate(form);
-        ProductPojo p = convert(form);
-        productService.update(id, p);
+        ProductPojo productPojo = convert(form);
+        productService.update(id, productPojo);
     }
 
 

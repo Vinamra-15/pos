@@ -40,6 +40,10 @@ public class ProductService {
 		return dao.selectAll();
 	}
 
+	public ProductPojo getByBarcode(String barcode){
+		return dao.selectByBarcode(barcode);
+	}
+
 	@Transactional(rollbackOn  = ApiException.class)
 	public void update(int id, ProductPojo p) throws ApiException {
 
