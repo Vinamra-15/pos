@@ -48,6 +48,17 @@ public class ProductPojo {
         return name;
     }
 
+    @Override
+    public String toString() {
+        return "ProductPojo{" +
+                "id=" + id +
+                ", barcode='" + barcode + '\'' +
+                ", name='" + name + '\'' +
+                ", mrp=" + mrp +
+                ", brandId=" + brandId +
+                '}';
+    }
+
     public void setName(String name) {
         this.name = name;
     }

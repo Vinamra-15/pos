@@ -51,10 +51,19 @@ public class ProductService {
 		if(dao.checkProductDuplicateExists(id,p.getBarcode())){
 			throw new ApiException("Product with barcode: " + p.getBarcode()+ " already exists.");
 		}
+
+
 		ProductPojo ex = getCheck(id);
+
 		ex.setName(p.getName());
+
 		ex.setBarcode(p.getBarcode());
+
 		ex.setMrp(p.getMrp());
+
+		ex.setBrandId(p.getBrandId());
+
+
 		dao.update(ex);
 	}
 
