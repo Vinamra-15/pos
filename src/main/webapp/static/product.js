@@ -1,7 +1,6 @@
 
 function getProductUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	//console.log(baseUrl);
 	return baseUrl + "/api/products";
 }
 
@@ -11,8 +10,6 @@ function addProduct(event){
 	var $form = $("#product-form");
 	var json = toJson($form);
 	var url = getProductUrl();
-
-	//console.log(json);
 
 	$.ajax({
 	   url: url,
@@ -144,8 +141,6 @@ function displayProductList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		//console.log(e);
-		//var buttonHtml = '<button onclick="deleteProduct(' + e.id + ')">delete</button>'
 		var buttonHtml = ' <button onclick="displayEditProduct(' + e.id + ')">edit</button>'
 		var row = '<tr>'
 		+ '<td>' + e.barcode + '</td>'
@@ -203,8 +198,11 @@ function displayUploadData(){
 
 function displayProduct(data){
 	$("#product-edit-form input[name=name]").val(data.name);	
-	$("#product-edit-form input[name=age]").val(data.age);	
-	$("#product-edit-form input[name=id]").val(data.id);	
+	$("#product-edit-form input[name=barcode]").val(data.barcode);
+	$("#product-edit-form input[name=mrp]").val(data.mrp);
+	$("#product-edit-form input[name=brandName]").val(data.brandName);
+	$("#product-edit-form input[name=brandCategory]").val(data.brandCategory);
+	$("#product-edit-form input[name=id]").val(data.id);
 	$('#edit-product-modal').modal('toggle');
 }
 

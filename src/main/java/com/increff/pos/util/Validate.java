@@ -24,24 +24,15 @@ public class Validate {
     }
 
     public static void validateProductForm(ProductForm form) throws ApiException {
-        double mrp = 0;
-        try{
-            mrp = Double.parseDouble(form.getMrp());
-        }
-        catch (Exception exception)
-        {
-            throw new ApiException("MRP must be a number(double)");
-        }
 
-
-
-        if(StringUtil.isEmpty(form.getName())||StringUtil.isEmpty(form.getBarcode())||StringUtil.isEmpty(form.getBrandName())||StringUtil.isEmpty(form.getBrandCategory())) {
+        if(StringUtil.isEmpty(form.getName())||StringUtil.isEmpty(form.getBarcode())||StringUtil.isEmpty(form.getBrandName())||StringUtil.isEmpty(form.getBrandCategory())||form.getMrp()==null) {
             throw new ApiException("Field(s) cannot be empty");
         }
 
-        if(mrp<0)
+
+        if(form.getMrp()<0)
         {
-            throw new ApiException("MRP must be a non-negative number(double)");
+            throw new ApiException("MRP must be a non-negative number!");
         }
     }
 }

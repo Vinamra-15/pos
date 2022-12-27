@@ -30,7 +30,7 @@ public class BrandService {
 
 
 	@Transactional(rollbackOn = ApiException.class)
-	public BrandPojo get(int id) throws ApiException {
+	public BrandPojo get(Integer id) throws ApiException {
 		return getCheck(id);
 	}
 
@@ -40,7 +40,7 @@ public class BrandService {
 	}
 
 	@Transactional(rollbackOn  = ApiException.class)
-	public void update(int id, BrandPojo p) throws ApiException {
+	public void update(Integer id, BrandPojo p) throws ApiException {
 		if(dao.checkBrandCatDuplicateExists(p.getName(),p.getCategory())){
 			throw new ApiException("Brand: " + p.getName() + " in the category: " + p.getCategory() + " already exists.");
 		}
@@ -51,7 +51,7 @@ public class BrandService {
 	}
 
 	@Transactional
-	public BrandPojo getCheck(int id) throws ApiException {
+	public BrandPojo getCheck(Integer id) throws ApiException {
 		BrandPojo p = dao.select(id);
 		if (p == null) {
 			throw new ApiException("Brand with given ID does not exist, id: " + id);

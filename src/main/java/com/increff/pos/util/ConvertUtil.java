@@ -28,7 +28,7 @@ public class ConvertUtil {
         d.setName(productPojo.getName());
         d.setId(productPojo.getId());
         d.setBarcode(productPojo.getBarcode());
-        d.setMrp(Double.toString(productPojo.getMrp()));
+        d.setMrp(productPojo.getMrp());
         d.setBrandName(brandPojo.getName());
         d.setBrandCategory(brandPojo.getCategory());
         return d;
@@ -39,7 +39,7 @@ public class ConvertUtil {
         ProductPojo p = new ProductPojo();
         p.setBarcode(productForm.getBarcode());
         p.setName(productForm.getName());
-        p.setMrp(Double.parseDouble(productForm.getMrp()));
+        p.setMrp(productForm.getMrp());
         p.setBrandId(brandPojo.getId());
         return p;
     }

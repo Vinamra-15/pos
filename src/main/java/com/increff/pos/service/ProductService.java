@@ -26,12 +26,12 @@ public class ProductService {
 	}
 
 	@Transactional
-	public void delete(int id) {
+	public void delete(Integer id) {
 		dao.delete(id);
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
-	public ProductPojo get(int id) throws ApiException {
+	public ProductPojo get(Integer id) throws ApiException {
 		return getCheck(id);
 	}
 
@@ -45,7 +45,7 @@ public class ProductService {
 	}
 
 	@Transactional(rollbackOn  = ApiException.class)
-	public void update(int id, ProductPojo p) throws ApiException {
+	public void update(Integer id, ProductPojo p) throws ApiException {
 
 
 		if(dao.checkProductDuplicateExists(id,p.getBarcode())){
@@ -68,7 +68,7 @@ public class ProductService {
 	}
 
 	@Transactional
-	public ProductPojo getCheck(int id) throws ApiException {
+	public ProductPojo getCheck(Integer id) throws ApiException {
 		ProductPojo p = dao.select(id);
 		if (p == null) {
 			throw new ApiException("Product with given ID does not exist, id: " + id);

@@ -49,7 +49,7 @@ public class ProductDto {
 
     }
 
-    public ProductData get(int id) throws ApiException {
+    public ProductData get(Integer id) throws ApiException {
         ProductPojo productPojo = productService.get(id);
         BrandPojo brandPojo = brandService.get(productPojo.getBrandId());
         return convertProductPojoToProductData(productPojo,brandPojo);
@@ -67,7 +67,7 @@ public class ProductDto {
 
     }
 
-    public void update(int id, ProductForm productForm) throws ApiException {
+    public void update(Integer id, ProductForm productForm) throws ApiException {
         normalizeProductForm(productForm);
         validateProductForm(productForm);
 

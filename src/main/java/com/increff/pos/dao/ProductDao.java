@@ -26,14 +26,14 @@ public class ProductDao extends AbstractDao {
         em.persist(p);
     }
 
-    public int delete(int id) {
+    public Integer delete(Integer id) {
         Query query = em.createQuery(delete_id);
         query.setParameter("id", id);
         return query.executeUpdate();
     }
 
 
-    public ProductPojo select(int id) {
+    public ProductPojo select(Integer id) {
         TypedQuery<ProductPojo> query = getQuery(select_id, ProductPojo.class);
         query.setParameter("id", id);
         return getSingle(query);
@@ -54,7 +54,7 @@ public class ProductDao extends AbstractDao {
         return getSingle(query);
     }
 
-    public boolean checkProductDuplicateExists(int id, String barcode){  //check for editing
+    public boolean checkProductDuplicateExists(Integer id, String barcode){  //check for editing
         ProductPojo productPojo = selectByBarcode(barcode);
         return id != productPojo.getId();
     }

@@ -10,29 +10,29 @@ public class ProductPojo {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String barcode;
     private String name;
-    private double mrp;
+    private Double mrp;
 
-    private int brandId;
+    private Integer brandId;
 
 
-    public int getBrandId() {
+    public Integer getBrandId() {
         return brandId;
     }
 
-    public void setBrandId(int brandId) {
+    public void setBrandId(Integer brandId) {
         this.brandId = brandId;
     }
 
 
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -63,11 +63,11 @@ public class ProductPojo {
         this.name = name;
     }
 
-    public double getMrp() {
+    public Double getMrp() {
         return mrp;
     }
 
-    public void setMrp(double mrp) {
+    public void setMrp(Double mrp) {
         this.mrp = mrp;
     }
 }

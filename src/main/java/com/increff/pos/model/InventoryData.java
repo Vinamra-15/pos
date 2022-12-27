@@ -4,7 +4,7 @@ public class InventoryData {
     private String barcode;
     private String productName;
 
-    private int quantity;
+    private Integer quantity;
 
     public String getBarcode() {
         return barcode;
@@ -22,11 +22,11 @@ public class InventoryData {
         this.productName = productName;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 }

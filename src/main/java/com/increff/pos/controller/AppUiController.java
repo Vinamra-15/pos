@@ -12,12 +12,12 @@ public class AppUiController extends AbstractUiController {
 		return mav("home.html");
 	}
 
-	@RequestMapping(value = "/ui/brand")
+	@RequestMapping(value = "/ui/brands")
 	public ModelAndView brand() {
 		return mav("brand.html");
 	}
 
-	@RequestMapping(value = "/ui/product")
+	@RequestMapping(value = "/ui/products")
 	public ModelAndView product() {
 		return mav("product.html");
 	}

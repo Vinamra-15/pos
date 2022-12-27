@@ -31,7 +31,7 @@ public class BrandDto {
 		brandService.add(p);
     }
 
-    public BrandData get(int id) throws ApiException {
+    public BrandData get(Integer id) throws ApiException {
         BrandPojo pojo = brandService.get(id);
         return convertBrandPojoToBrandData(pojo);
     }
@@ -47,7 +47,7 @@ public class BrandDto {
         return list2;
     }
 
-    public void update(int id, BrandForm form) throws ApiException {
+    public void update(Integer id, BrandForm form) throws ApiException {
         normalizeBrandForm(form);
         validateBrandForm(form);
         BrandPojo p = convertBrandFormToBrandPojo(form);

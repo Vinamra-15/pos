@@ -22,7 +22,7 @@ public class InventoryService {
 
 
     @Transactional(rollbackOn = ApiException.class)
-    public InventoryPojo get(int productId) throws ApiException {
+    public InventoryPojo get(Integer productId) throws ApiException {
         return getCheck(productId);
     }
 
@@ -34,7 +34,7 @@ public class InventoryService {
 
 
     @Transactional(rollbackOn  = ApiException.class)
-    public void update(int productId, InventoryPojo inventoryPojo) throws ApiException {
+    public void update(Integer productId, InventoryPojo inventoryPojo) throws ApiException {
 
         InventoryPojo ex = getCheck(productId);
         ex.setProductId(inventoryPojo.getProductId());
@@ -43,7 +43,7 @@ public class InventoryService {
     }
 
     @Transactional
-    public InventoryPojo getCheck(int productId) throws ApiException {
+    public InventoryPojo getCheck(Integer productId) throws ApiException {
         InventoryPojo p = dao.select(productId);
         if (p == null) {
             throw new ApiException("Product with given barcode does not exist");
