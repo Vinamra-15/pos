@@ -18,11 +18,7 @@ public class InventoryApiController {
     @Autowired
     private InventoryDto dto;
 
-    @ApiOperation(value = "Adds product quantity")
-    @RequestMapping(path = "/api/inventory",method = RequestMethod.POST)
-    public void add(@RequestBody InventoryForm form) throws ApiException {
-          dto.add(form);
-    }
+
 
     @ApiOperation(value = "Gets a product-quantity detail by ID")
     @RequestMapping(path = "/api/inventory/{barcode}", method = RequestMethod.GET)

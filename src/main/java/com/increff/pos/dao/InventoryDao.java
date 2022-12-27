@@ -28,10 +28,7 @@ public class InventoryDao extends AbstractDao{
     }
 
     public int delete(int id) {
-//        Query query = em.createQuery(delete_id);
-//        query.setParameter("id", id);
-//        return query.executeUpdate();
-        return 0;
+        return -1;
     }
 
 
