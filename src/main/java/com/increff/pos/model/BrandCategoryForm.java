@@ -1,9 +1,9 @@
 package com.increff.pos.model;
 
-public class BrandForm {
+public class BrandCategoryForm {
 
 	private Integer id;
-	private String name;
+	private String brand;
 
 	private String category;
 
@@ -15,12 +15,12 @@ public class BrandForm {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getBrand() {
+		return brand;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setBrand(String brand) {
+		this.brand = brand;
 	}
 
 	public String getCategory() {

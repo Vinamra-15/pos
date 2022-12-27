@@ -1,13 +1,13 @@
 package com.increff.pos.util;
 
-import com.increff.pos.model.BrandForm;
+import com.increff.pos.model.BrandCategoryForm;
 import com.increff.pos.model.InventoryForm;
 import com.increff.pos.model.ProductForm;
 import com.increff.pos.service.ApiException;
 
 public class Validate {
-    public static void validateBrandForm(BrandForm form) throws ApiException {
-        if(StringUtil.isEmpty(form.getName())||StringUtil.isEmpty(form.getCategory())) {
+    public static void validateBrandForm(BrandCategoryForm brandCategoryForm) throws ApiException {
+        if(StringUtil.isEmpty(brandCategoryForm.getBrand())||StringUtil.isEmpty(brandCategoryForm.getCategory())) {
             throw new ApiException("Field(s) cannot be empty");
         }
     }

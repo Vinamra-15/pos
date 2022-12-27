@@ -2,14 +2,13 @@ package com.increff.pos.dto;
 
 import com.increff.pos.model.ProductData;
 import com.increff.pos.model.ProductForm;
-import com.increff.pos.pojo.BrandPojo;
+import com.increff.pos.pojo.BrandCategoryPojo;
 import com.increff.pos.pojo.InventoryPojo;
 import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.service.ApiException;
-import com.increff.pos.service.BrandService;
+import com.increff.pos.service.BrandCategoryService;
 import com.increff.pos.service.InventoryService;
 import com.increff.pos.service.ProductService;
-import com.increff.pos.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ public class ProductDto {
     private ProductService productService;
 
     @Autowired
-    private BrandService brandService;
+    private BrandCategoryService brandCategoryService;
 
     @Autowired
     private InventoryService inventoryService;
@@ -36,8 +35,8 @@ public class ProductDto {
     public void add(ProductForm productForm) throws ApiException {
         normalizeProductForm(productForm);
         validateProductForm(productForm);
-        BrandPojo brandPojo = brandService.getCheckWithBrandCategory(productForm.getBrandName(),productForm.getBrandCategory());
-        ProductPojo productPojo = convertProductFormToProductPojo(productForm,brandPojo);
+        BrandCategoryPojo brandCategoryPojo = brandCategoryService.getCheckWithBrandCategory(productForm.getBrandName(),productForm.getBrandCategory());
+        ProductPojo productPojo = convertProductFormToProductPojo(productForm, brandCategoryPojo);
         productService.add(productPojo);
 
         //For every new added product, initialize its quantity in Inventory to Zero.
@@ -51,16 +50,16 @@ public class ProductDto {
 
     public ProductData get(Integer id) throws ApiException {
         ProductPojo productPojo = productService.get(id);
-        BrandPojo brandPojo = brandService.get(productPojo.getBrandId());
-        return convertProductPojoToProductData(productPojo,brandPojo);
+        BrandCategoryPojo brandCategoryPojo = brandCategoryService.get(productPojo.getBrandId());
+        return convertProductPojoToProductData(productPojo, brandCategoryPojo);
     }
 
     public List<ProductData> getAll() throws ApiException {
         List<ProductPojo> list = productService.getAll();
         List<ProductData> list2 = new ArrayList<ProductData>();
         for (ProductPojo productPojo : list) {
-            BrandPojo brandPojo = brandService.get(productPojo.getBrandId());
-            list2.add(convertProductPojoToProductData(productPojo,brandPojo));
+            BrandCategoryPojo brandCategoryPojo = brandCategoryService.get(productPojo.getBrandId());
+            list2.add(convertProductPojoToProductData(productPojo, brandCategoryPojo));
         }
         Collections.reverse(list2);
         return list2;
@@ -71,8 +70,8 @@ public class ProductDto {
         normalizeProductForm(productForm);
         validateProductForm(productForm);
 
-        BrandPojo brandPojo = brandService.getCheckWithBrandCategory(productForm.getBrandName(),productForm.getBrandCategory());
-        ProductPojo productPojo = convertProductFormToProductPojo(productForm,brandPojo);
+        BrandCategoryPojo brandCategoryPojo = brandCategoryService.getCheckWithBrandCategory(productForm.getBrandName(),productForm.getBrandCategory());
+        ProductPojo productPojo = convertProductFormToProductPojo(productForm, brandCategoryPojo);
         productService.update(id, productPojo);
     }
 

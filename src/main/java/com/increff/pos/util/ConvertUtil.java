@@ -1,46 +1,46 @@
 package com.increff.pos.util;
 
 import com.increff.pos.model.*;
-import com.increff.pos.pojo.BrandPojo;
+import com.increff.pos.pojo.BrandCategoryPojo;
 import com.increff.pos.pojo.InventoryPojo;
 import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.service.ApiException;
 
 public class ConvertUtil {
-    public static BrandData convertBrandPojoToBrandData(BrandPojo p) {
-        BrandData d = new BrandData();
+    public static BrandCategoryData convertBrandPojoToBrandData(BrandCategoryPojo p) {
+        BrandCategoryData d = new BrandCategoryData();
         d.setCategory(p.getCategory());
-        d.setName(p.getName());
+        d.setBrand(p.getBrand());
         d.setId(p.getId());
         return d;
     }
 
-    public static BrandPojo convertBrandFormToBrandPojo(BrandForm form) {
-        BrandPojo p = new BrandPojo();
+    public static BrandCategoryPojo convertBrandFormToBrandPojo(BrandCategoryForm form) {
+        BrandCategoryPojo p = new BrandCategoryPojo();
         p.setCategory(form.getCategory());
-        p.setName(form.getName());
+        p.setBrand(form.getBrand());
         return p;
     }
 
 
-    public static ProductData convertProductPojoToProductData(ProductPojo productPojo, BrandPojo brandPojo) throws ApiException {
+    public static ProductData convertProductPojoToProductData(ProductPojo productPojo, BrandCategoryPojo brandCategoryPojo) throws ApiException {
         ProductData d = new ProductData();
         d.setName(productPojo.getName());
         d.setId(productPojo.getId());
         d.setBarcode(productPojo.getBarcode());
         d.setMrp(productPojo.getMrp());
-        d.setBrandName(brandPojo.getName());
-        d.setBrandCategory(brandPojo.getCategory());
+        d.setBrandName(brandCategoryPojo.getBrand());
+        d.setBrandCategory(brandCategoryPojo.getCategory());
         return d;
     }
 
-    public static ProductPojo convertProductFormToProductPojo(ProductForm productForm, BrandPojo brandPojo) throws ApiException {
+    public static ProductPojo convertProductFormToProductPojo(ProductForm productForm, BrandCategoryPojo brandCategoryPojo) throws ApiException {
 
         ProductPojo p = new ProductPojo();
         p.setBarcode(productForm.getBarcode());
         p.setName(productForm.getName());
         p.setMrp(productForm.getMrp());
-        p.setBrandId(brandPojo.getId());
+        p.setBrandId(brandCategoryPojo.getId());
         return p;
     }
 

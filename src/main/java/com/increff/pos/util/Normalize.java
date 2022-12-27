@@ -1,11 +1,11 @@
 package com.increff.pos.util;
 
-import com.increff.pos.model.BrandForm;
+import com.increff.pos.model.BrandCategoryForm;
 import com.increff.pos.model.ProductForm;
 
 public class Normalize {
-    public static void normalizeBrandForm(BrandForm form) {
-        form.setName(StringUtil.toLowerCase(form.getName()));
+    public static void normalizeBrandForm(BrandCategoryForm form) {
+        form.setBrand(StringUtil.toLowerCase(form.getBrand()));
         form.setCategory(StringUtil.toLowerCase(form.getCategory()));
     }
 
