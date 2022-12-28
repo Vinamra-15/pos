@@ -6,34 +6,28 @@ import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = ApiException.class)
 public class InventoryService {
     @Autowired
     private InventoryDao dao;
 
-
-//    @Transactional(rollbackOn = ApiException.class)
     public void add(InventoryPojo inventoryPojo) throws ApiException {
         dao.insert(inventoryPojo);
     }
 
-
-    @Transactional(rollbackOn = ApiException.class)
     public InventoryPojo get(Integer productId) throws ApiException {
         return getCheck(productId);
     }
 
-    @Transactional
     public List<InventoryPojo> getAll() {
         return dao.selectAll();
     }
 
 
-
-    @Transactional(rollbackOn  = ApiException.class)
     public void update(Integer productId, InventoryPojo inventoryPojo) throws ApiException {
 
         InventoryPojo ex = getCheck(productId);
@@ -42,7 +36,6 @@ public class InventoryService {
         dao.update(ex);
     }
 
-    @Transactional
     public InventoryPojo getCheck(Integer productId) throws ApiException {
         InventoryPojo p = dao.select(productId);
         if (p == null) {

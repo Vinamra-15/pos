@@ -4,14 +4,14 @@ import com.increff.pos.model.BrandCategoryForm;
 import com.increff.pos.model.ProductForm;
 
 public class Normalize {
-    public static void normalizeBrandForm(BrandCategoryForm form) {
+    public static void normalizeForm(BrandCategoryForm form) {
         form.setBrand(StringUtil.toLowerCase(form.getBrand()));
         form.setCategory(StringUtil.toLowerCase(form.getCategory()));
     }
 
-    public static void normalizeProductForm(ProductForm form) {
+    public static void normalizeForm(ProductForm form) {
         form.setName(StringUtil.toLowerCase(form.getName()));
-        form.setBrandCategory(StringUtil.toLowerCase(form.getBrandCategory()));
-        form.setBrandName(StringUtil.toLowerCase(form.getBrandName()));
+        form.setCategory(StringUtil.toLowerCase(form.getCategory()));
+        form.setBrand(StringUtil.toLowerCase(form.getBrand()));
     }
 }

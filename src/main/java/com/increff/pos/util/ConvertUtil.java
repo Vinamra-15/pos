@@ -7,45 +7,40 @@ import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.service.ApiException;
 
 public class ConvertUtil {
-    public static BrandCategoryData convertBrandPojoToBrandData(BrandCategoryPojo p) {
-        BrandCategoryData d = new BrandCategoryData();
-        d.setCategory(p.getCategory());
-        d.setBrand(p.getBrand());
-        d.setId(p.getId());
-        return d;
+    public static BrandCategoryData convert(BrandCategoryPojo brandCategoryPojo) {
+        BrandCategoryData brandCategoryData = new BrandCategoryData();
+        brandCategoryData.setCategory(brandCategoryPojo.getCategory());
+        brandCategoryData.setBrand(brandCategoryPojo.getBrand());
+        brandCategoryData.setId(brandCategoryPojo.getId());
+        return brandCategoryData;
+    }
+    public static BrandCategoryPojo convert(BrandCategoryForm brandCategoryForm) {
+        BrandCategoryPojo brandCategoryPojo = new BrandCategoryPojo();
+        brandCategoryPojo.setCategory(brandCategoryForm.getCategory());
+        brandCategoryPojo.setBrand(brandCategoryForm.getBrand());
+        return brandCategoryPojo;
+    }
+    public static ProductData convert(ProductPojo productPojo, BrandCategoryPojo brandCategoryPojo) throws ApiException {
+        ProductData productData = new ProductData();
+        productData.setName(productPojo.getName());
+        productData.setId(productPojo.getId());
+        productData.setBarcode(productPojo.getBarcode());
+        productData.setMrp(productPojo.getMrp());
+        productData.setBrand(brandCategoryPojo.getBrand());
+        productData.setCategory(brandCategoryPojo.getCategory());
+        return productData;
+    }
+    public static ProductPojo convert(ProductForm productForm, BrandCategoryPojo brandCategoryPojo) throws ApiException {
+
+        ProductPojo productPojo = new ProductPojo();
+        productPojo.setBarcode(productForm.getBarcode());
+        productPojo.setName(productForm.getName());
+        productPojo.setMrp(productForm.getMrp());
+        productPojo.setBrandId(brandCategoryPojo.getId());
+        return productPojo;
     }
 
-    public static BrandCategoryPojo convertBrandFormToBrandPojo(BrandCategoryForm form) {
-        BrandCategoryPojo p = new BrandCategoryPojo();
-        p.setCategory(form.getCategory());
-        p.setBrand(form.getBrand());
-        return p;
-    }
-
-
-    public static ProductData convertProductPojoToProductData(ProductPojo productPojo, BrandCategoryPojo brandCategoryPojo) throws ApiException {
-        ProductData d = new ProductData();
-        d.setName(productPojo.getName());
-        d.setId(productPojo.getId());
-        d.setBarcode(productPojo.getBarcode());
-        d.setMrp(productPojo.getMrp());
-        d.setBrandName(brandCategoryPojo.getBrand());
-        d.setBrandCategory(brandCategoryPojo.getCategory());
-        return d;
-    }
-
-    public static ProductPojo convertProductFormToProductPojo(ProductForm productForm, BrandCategoryPojo brandCategoryPojo) throws ApiException {
-
-        ProductPojo p = new ProductPojo();
-        p.setBarcode(productForm.getBarcode());
-        p.setName(productForm.getName());
-        p.setMrp(productForm.getMrp());
-        p.setBrandId(brandCategoryPojo.getId());
-        return p;
-    }
-
-
-    public static InventoryData convertInventoryPojoToInventoryData(InventoryPojo inventoryPojo, ProductPojo productPojo) {
+    public static InventoryData convert(InventoryPojo inventoryPojo, ProductPojo productPojo) {
         InventoryData inventoryData = new InventoryData();
         inventoryData.setProductName(productPojo.getName());
         inventoryData.setBarcode(productPojo.getBarcode());
@@ -53,12 +48,10 @@ public class ConvertUtil {
         return inventoryData;
     }
 
-    public static InventoryPojo convertInventoryFormToInventoryPojo(InventoryForm inventoryForm, ProductPojo productPojo) throws ApiException {
+    public static InventoryPojo convert(InventoryForm inventoryForm, ProductPojo productPojo) throws ApiException {
         InventoryPojo inventoryPojo = new InventoryPojo();
         inventoryPojo.setQuantity(inventoryForm.getQuantity());
         inventoryPojo.setProductId(productPojo.getId());
         return inventoryPojo;
     }
-
-
 }

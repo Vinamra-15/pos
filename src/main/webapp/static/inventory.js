@@ -105,7 +105,7 @@ function displayInventoryList(data){
    $tbody.empty();
    for(var i in data){
       var e = data[i];
-      var buttonHtml = ' <button onclick="displayEditInventory(\'' + e.barcode + '\')">edit</button>'
+      var buttonHtml = ' <button type="button" class="btn btn-outline-secondary" onclick="displayEditInventory(\'' + e.barcode + '\')">Edit</button>'
       var row = '<tr>'
       + '<td>' + e.barcode + '</td>'
       + '<td>' + e.productName + '</td>'

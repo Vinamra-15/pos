@@ -8,6 +8,7 @@ import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.service.ApiException;
 import com.increff.pos.service.InventoryService;
 import com.increff.pos.service.ProductService;
+import com.increff.pos.util.ConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,25 +16,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.increff.pos.util.ConvertUtil.convertInventoryFormToInventoryPojo;
-import static com.increff.pos.util.ConvertUtil.convertInventoryPojoToInventoryData;
-import static com.increff.pos.util.Validate.validateInventoryForm;
+import static com.increff.pos.util.ConvertUtil.convert;
+import static com.increff.pos.util.Validate.validateForm;
 
 
 @Component
 public class InventoryDto {
     @Autowired
     private InventoryService inventoryService;
-
     @Autowired
     private ProductService productService;
-
-
-
     public InventoryData get(String barcode) throws ApiException {
         ProductPojo productPojo = productService.getByBarcode(barcode);
         InventoryPojo inventoryPojo = inventoryService.get(productPojo.getId());
-        return convertInventoryPojoToInventoryData(inventoryPojo,productPojo);
+        return convert(inventoryPojo,productPojo);
     }
 
     public List<InventoryData> getAll() throws ApiException {
@@ -41,7 +37,7 @@ public class InventoryDto {
         List<InventoryData> list2 = new ArrayList<InventoryData>();
         for (InventoryPojo inventoryPojo : list) {
             ProductPojo productPojo = productService.get(inventoryPojo.getProductId());
-            list2.add(convertInventoryPojoToInventoryData(inventoryPojo,productPojo));
+            list2.add(convert(inventoryPojo,productPojo));
         }
 
         Collections.reverse(list2);
@@ -51,9 +47,9 @@ public class InventoryDto {
 
     public void update(String barcode, InventoryForm inventoryForm) throws ApiException {
         try{
-            validateInventoryForm(inventoryForm);
+            validateForm(inventoryForm);
             ProductPojo productPojo = productService.getByBarcode(barcode);
-            InventoryPojo inventoryPojo = convertInventoryFormToInventoryPojo(inventoryForm,productPojo);
+            InventoryPojo inventoryPojo = ConvertUtil.convert(inventoryForm,productPojo);
             inventoryService.update(productPojo.getId(), inventoryPojo);
 
         }

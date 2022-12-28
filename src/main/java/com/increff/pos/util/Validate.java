@@ -6,12 +6,12 @@ import com.increff.pos.model.ProductForm;
 import com.increff.pos.service.ApiException;
 
 public class Validate {
-    public static void validateBrandForm(BrandCategoryForm brandCategoryForm) throws ApiException {
+    public static void validateForm(BrandCategoryForm brandCategoryForm) throws ApiException {
         if(StringUtil.isEmpty(brandCategoryForm.getBrand())||StringUtil.isEmpty(brandCategoryForm.getCategory())) {
             throw new ApiException("Field(s) cannot be empty");
         }
     }
-    public static void validateInventoryForm(InventoryForm inventoryForm) throws ApiException {
+    public static void validateForm(InventoryForm inventoryForm) throws ApiException {
 
         if(StringUtil.isEmpty(inventoryForm.getBarcode())|| inventoryForm.getQuantity()==null) {
             throw new ApiException("Field(s) cannot be empty");
@@ -23,14 +23,14 @@ public class Validate {
         }
     }
 
-    public static void validateProductForm(ProductForm form) throws ApiException {
+    public static void validateForm(ProductForm productForm) throws ApiException {
 
-        if(StringUtil.isEmpty(form.getName())||StringUtil.isEmpty(form.getBarcode())||StringUtil.isEmpty(form.getBrandName())||StringUtil.isEmpty(form.getBrandCategory())||form.getMrp()==null) {
+        if(StringUtil.isEmpty(productForm.getName())||StringUtil.isEmpty(productForm.getBarcode())||StringUtil.isEmpty(productForm.getBrand())||StringUtil.isEmpty(productForm.getCategory())||productForm.getMrp()==null) {
             throw new ApiException("Field(s) cannot be empty");
         }
 
 
-        if(form.getMrp()<0)
+        if(productForm.getMrp()<0)
         {
             throw new ApiException("MRP must be a non-negative number!");
         }

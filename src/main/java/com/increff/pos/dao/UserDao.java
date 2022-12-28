@@ -4,13 +4,14 @@ import java.util.List;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.stereotype.Repository;
 
 import com.increff.pos.pojo.UserPojo;
 
 @Repository
+@Transactional
 public class UserDao extends AbstractDao {
 
 	private static String delete_id = "delete from UserPojo p where id=:id";

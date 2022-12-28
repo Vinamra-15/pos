@@ -28,7 +28,7 @@ public class BrandCategoryApiController {
 	@Autowired
 	private BrandCategoryDto dto;
 
-	@ApiOperation(value = "Adds an brand")
+	@ApiOperation(value = "Adds a brand")
 	@RequestMapping(path = "/api/brands", method = RequestMethod.POST)
 	public void add(@RequestBody BrandCategoryForm brandCategoryForm) throws ApiException {
 		dto.add(brandCategoryForm);
@@ -52,8 +52,4 @@ public class BrandCategoryApiController {
 	public void update(@PathVariable Integer id, @RequestBody BrandCategoryForm brandCategoryForm) throws ApiException {
 		dto.update(id, brandCategoryForm);
 	}
-	
-
-
-
 }

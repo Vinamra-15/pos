@@ -7,7 +7,8 @@ function getProductUrl(){
 //BUTTON ACTIONS
 function addProduct(event){
 	//Set the values to update
-	var $form = $("#product-form");
+    var $modal = $("#add-product-modal").modal('toggle');
+	var $form = $("#product-add-form");
 	var json = toJson($form);
 	var url = getProductUrl();
 
@@ -139,14 +140,15 @@ function downloadErrors(){
 function displayProductList(data){
 	var $tbody = $('#product-table').find('tbody');
 	$tbody.empty();
+	data.reverse();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = ' <button onclick="displayEditProduct(' + e.id + ')">edit</button>'
+		var buttonHtml = ' <button type="button" class="btn btn-outline-secondary"  onclick="displayEditProduct(' + e.id + ')">Edit</button>'
 		var row = '<tr>'
 		+ '<td>' + e.barcode + '</td>'
 		+ '<td>' + e.name + '</td>'
-		+ '<td>' + e.brandName + '</td>'
-		+ '<td>'  + e.brandCategory + '</td>'
+		+ '<td>' + e.brand + '</td>'
+		+ '<td>'  + e.category + '</td>'
 		+ '<td>' + e.mrp + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
@@ -200,11 +202,17 @@ function displayProduct(data){
 	$("#product-edit-form input[name=name]").val(data.name);	
 	$("#product-edit-form input[name=barcode]").val(data.barcode);
 	$("#product-edit-form input[name=mrp]").val(data.mrp);
-	$("#product-edit-form input[name=brandName]").val(data.brandName);
-	$("#product-edit-form input[name=brandCategory]").val(data.brandCategory);
+	$("#product-edit-form input[name=brand]").val(data.brand);
+	$("#product-edit-form input[name=category]").val(data.category);
 	$("#product-edit-form input[name=id]").val(data.id);
 	$('#edit-product-modal').modal('toggle');
 }
+
+function displayAddProductModal(){
+    $('#add-product-modal').modal('toggle');
+}
+
+
 
 
 //INITIALIZATION CODE

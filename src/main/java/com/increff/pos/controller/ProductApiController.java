@@ -23,15 +23,11 @@ public class ProductApiController {
 
     @Autowired
     private ProductDto dto;
-
-
-
     @ApiOperation(value = "Adds a product")
     @RequestMapping(path = "/api/products", method = RequestMethod.POST)
     public void add(@RequestBody ProductForm form) throws ApiException {
         dto.add(form);
     }
-
 
     @ApiOperation(value = "Gets a product by ID")
     @RequestMapping(path = "/api/products/{id}", method = RequestMethod.GET)
@@ -50,8 +46,5 @@ public class ProductApiController {
     public void update(@PathVariable Integer id, @RequestBody ProductForm form) throws ApiException {
         dto.update(id,form);
     }
-
-
-
 
 }
