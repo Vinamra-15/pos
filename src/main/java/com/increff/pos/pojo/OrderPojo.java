@@ -4,16 +4,17 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 public class OrderPojo {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
-    @Column(nullable = false)
-    private LocalDateTime dateTime;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date datetime;
 }

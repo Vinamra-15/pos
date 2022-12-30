@@ -29,7 +29,8 @@ public class OrderDao extends AbstractDao{
 
     public List<OrderPojo> selectAll() {
         TypedQuery<OrderPojo> query = getQuery(select_all, OrderPojo.class);
-        return query.getResultList();
+        List<OrderPojo> result = query.getResultList();
+        return result;
     }
 
 

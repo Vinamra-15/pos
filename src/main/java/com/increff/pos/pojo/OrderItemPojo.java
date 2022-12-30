@@ -8,10 +8,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "order_item",
-        indexes = {
-                @Index(name = "orderId_productId_idx", columnList = "orderId,productId",unique= true),
-        })
+@Table(name = "order_items")
 public class OrderItemPojo {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

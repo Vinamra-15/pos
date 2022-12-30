@@ -1,9 +1,7 @@
 package com.increff.pos.util;
 
 import com.increff.pos.model.*;
-import com.increff.pos.pojo.BrandCategoryPojo;
-import com.increff.pos.pojo.InventoryPojo;
-import com.increff.pos.pojo.ProductPojo;
+import com.increff.pos.pojo.*;
 import com.increff.pos.service.ApiException;
 
 public class ConvertUtil {
@@ -53,5 +51,31 @@ public class ConvertUtil {
         inventoryPojo.setQuantity(inventoryForm.getQuantity());
         inventoryPojo.setProductId(productPojo.getId());
         return inventoryPojo;
+    }
+
+    public static OrderItemData convert(OrderItemPojo orderItemPojo,ProductPojo productPojo){
+        OrderItemData orderItemData = new OrderItemData();
+        orderItemData.setId(orderItemPojo.getId());
+        orderItemData.setQuantity(orderItemPojo.getQuantity());
+        orderItemData.setName(productPojo.getName());
+        orderItemData.setBarcode(productPojo.getBarcode());
+        orderItemData.setSellingPrice(orderItemPojo.getSellingPrice());
+        return orderItemData;
+    }
+
+    public static OrderItemPojo convert(OrderItemForm orderItemForm, ProductPojo productPojo, OrderPojo orderPojo){
+        OrderItemPojo orderItemPojo = new OrderItemPojo();
+        orderItemPojo.setQuantity(orderItemForm.getQuantity());
+        orderItemPojo.setProductId(productPojo.getId());
+        orderItemPojo.setOrderId(orderPojo.getId());
+        orderItemPojo.setSellingPrice(orderItemForm.getSellingPrice());
+        return orderItemPojo;
+    }
+
+    public static OrderData convert(OrderPojo orderPojo){
+        OrderData orderData = new OrderData();
+        orderData.setId(orderPojo.getId());
+        orderData.setDatetime(orderPojo.getDatetime());
+        return orderData;
     }
 }
