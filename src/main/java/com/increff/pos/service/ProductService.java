@@ -30,8 +30,13 @@ public class ProductService {
 		return dao.selectAll();
 	}
 
-	public ProductPojo getByBarcode(String barcode){
-		return dao.selectByBarcode(barcode);
+	public ProductPojo getByBarcode(String barcode) throws ApiException{
+		ProductPojo productPojo =  dao.selectByBarcode(barcode);
+		if(productPojo==null)
+		{
+			throw new ApiException("No product exists with barcode " + barcode);
+		}
+		return productPojo;
 	}
 
 

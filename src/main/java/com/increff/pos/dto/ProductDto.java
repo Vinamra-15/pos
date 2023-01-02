@@ -55,6 +55,12 @@ public class ProductDto {
         return convert(productPojo, brandCategoryPojo);
     }
 
+    public ProductData getByBarcode(String barcode) throws ApiException {
+        ProductPojo productPojo = productService.getByBarcode(barcode);
+        BrandCategoryPojo brandCategoryPojo = brandCategoryService.get(productPojo.getBrandId());
+        return convert(productPojo, brandCategoryPojo);
+    }
+
     public List<ProductData> getAll() throws ApiException {
         List<ProductPojo> list = productService.getAll();
         List<ProductData> list2 = new ArrayList<ProductData>();

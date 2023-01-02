@@ -140,7 +140,6 @@ function downloadErrors(){
 function displayProductList(data){
 	var $tbody = $('#product-table').find('tbody');
 	$tbody.empty();
-	data.reverse();
 	for(var i in data){
 		var e = data[i];
 		var buttonHtml = ' <button type="button" class="btn btn-outline-secondary"  onclick="displayEditProduct(' + e.id + ')">Edit</button>'
