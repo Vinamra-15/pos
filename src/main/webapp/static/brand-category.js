@@ -147,10 +147,10 @@ function displayBrandCategoryList(data){
 		//console.log(e);
 		//var buttonHtml = '<button onclick="deleteBrand(' + e.id + ')">delete</button>'
 		var buttonHtml = ' <button type="button" class="btn btn-outline-secondary" onclick="displayEditBrandCategory(' + e.id + ')">Edit</button>'
-		var row = '<tr>'
-		+ '<td>' + e.brand + '</td>'
-		+ '<td>'  + e.category + '</td>'
-		+ '<td>' + buttonHtml + '</td>'
+		var row = '<tr class="text-center">'
+		+ '<td class="text-center">' + e.brand + '</td>'
+		+ '<td class="text-center">'  + e.category + '</td>'
+		+ '<td class="text-center">' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 	}

@@ -22,7 +22,6 @@ public class OrderService {
         OrderPojo orderPojo = orderDao.select(id);
         if(orderPojo==null)
             throw new ApiException("No order found with Id: " + id);
-
         return orderPojo;
     }
 

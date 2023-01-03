@@ -43,6 +43,7 @@ function getCurrentOrderItem(typeOfOperation) {
     return {
         barcode: $('#inputAddModalBarcode').val(),
         quantity: Number.parseInt($('#inputAddModalQuantity').val()),
+        sellingPrice:Number.parseFloat($('#inputAddModalSellingPrice').val())
     };
   }
   else
@@ -50,6 +51,7 @@ function getCurrentOrderItem(typeOfOperation) {
     return {
         barcode: $('#inputEditModalBarcode').val(),
         quantity: Number.parseInt($('#inputEditModalQuantity').val()),
+        sellingPrice:Number.parseFloat($('#inputEditModalSellingPrice').val())
       };
   }
 }
@@ -76,7 +78,7 @@ function addOrderItem(typeOfOperation) {
         addItem({
           barcode: product.barcode,
           name: product.name,
-          mrp: product.mrp,
+          sellingPrice: item.sellingPrice,
           quantity: item.quantity,
         })
          displayCreateOrderItems(orderItems);
@@ -91,7 +93,7 @@ function addOrderItem(typeOfOperation) {
             addItem({
               barcode: product.barcode,
               name: product.name,
-              sellingPrice: product.mrp,
+              sellingPrice: item.sellingPrice,
               quantity: item.quantity,
             })
             displayEditOrderItems(orderItems)
@@ -122,10 +124,10 @@ function displayCreateOrderItems(data) {
   for (let i in data) {
     const item = data[i];
     const row = `
-      <tr>
+      <tr class="text-center">
         <td class="barcodeData">${item.barcode}</td>
         <td>${item.name}</td>
-        <td >${item.mrp}</td>
+        <td >${item.sellingPrice}</td>
         <td>
           <input
             id="order-item-${item.barcode}"
@@ -161,11 +163,13 @@ function deleteOrderItem(barcode,typeOfOperation) {
 function resetAddItemForm() {
   $('#inputAddModalBarcode').val('');
   $('#inputAddModalQuantity').val('');
+  $('#inputAddModalSellingPrice').val('');
 }
 
 function resetEditItemForm() {
   $('#inputEditModalBarcode').val('');
   $('#inputEditModalQuantity').val('');
+  $('#inputEditModalSellingPrice').val('');
 }
 
 function resetCreateModal() {
@@ -174,14 +178,33 @@ function resetCreateModal() {
   displayCreateOrderItems(orderItems);
 }
 
+function getBillAmount(id){
+    const url = getOrderUrl + id;
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function (data) {
+          // sum data items
+          let amount = 0;
+          for(let i in data.items){
+            amount = amount + i.sellingPrice
+          }
+          return amount
+        },
+        error: handleAjaxError,
+      });
+
+}
+
 
 function displayOrderList(orders) {
   var $tbody = $('#order-table').find('tbody');
   $tbody.empty();
 
   orders.forEach((order) => {
+    //billAmount = getBillAmount(order.id)
     var row = `
-        <tr>
+        <tr class="text-center">
             <td>${order.id}</td>
             <td>${order.datetime}</td>
             <td>
@@ -233,7 +256,7 @@ function displayEditOrderItems(data){
           console.log(item)
 
           const row = `
-            <tr>
+            <tr class="text-center">
               <td class="barcodeData">${item.barcode}</td>
               <td>${item.name}</td>
               <td >${item.sellingPrice}</td>
@@ -301,7 +324,7 @@ function displayOrderDetails(data) {
     for (let i in items) {
       const item = items[i];
       const row = `
-        <tr>
+        <tr class="text-center">
           <td>${item.barcode}</td>
           <td>${item.name}</td>
           <td >${item.sellingPrice}</td>
@@ -356,7 +379,7 @@ function placeNewOrder() {
     return {
       barcode: it.barcode,
       quantity: it.quantity,
-      sellingPrice:it.mrp
+      sellingPrice:it.sellingPrice
     };
   });
 

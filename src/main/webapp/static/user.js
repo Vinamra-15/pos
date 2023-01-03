@@ -62,7 +62,7 @@ function displayUserList(data){
 		var e = data[i];
 		var buttonHtml = '<button onclick="deleteUser(' + e.id + ')">delete</button>'
 		buttonHtml += ' <button onclick="displayEditUser(' + e.id + ')">edit</button>'
-		var row = '<tr>'
+		var row = '<tr class="text-center">'
 		+ '<td>' + e.id + '</td>'
 		+ '<td>' + e.email + '</td>'
 		+ '<td>' + buttonHtml + '</td>'

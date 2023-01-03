@@ -106,7 +106,7 @@ function displayInventoryList(data){
    for(var i in data){
       var e = data[i];
       var buttonHtml = ' <button type="button" class="btn btn-outline-secondary" onclick="displayEditInventory(\'' + e.barcode + '\')">Edit</button>'
-      var row = '<tr>'
+      var row = '<tr class="text-center">'
       + '<td>' + e.barcode + '</td>'
       + '<td>' + e.productName + '</td>'
       + '<td>'  + e.quantity + '</td>'
