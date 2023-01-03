@@ -32,5 +32,11 @@ public class OrderItemDto {
         return list2;
     }
 
+    public OrderItemData getByOrderIdProductId(Integer orderId, Integer productId) throws ApiException {
+        OrderItemPojo orderItemPojo = orderItemService.getByOrderIdProductId(orderId,productId);
+        ProductPojo productPojo = productService.get(productId);
+        return convert(orderItemPojo,productPojo);
+    }
+
 
 }

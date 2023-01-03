@@ -37,11 +37,21 @@ function getProductByBarcode(barcode, onSuccess) {
 //UI DISPLAY METHODS
 let orderItems = [];
 
-function getCurrentOrderItem() {
-  return {
-    barcode: $('#inputBarcode').val(),
-    quantity: Number.parseInt($('#inputQuantity').val()),
-  };
+function getCurrentOrderItem(typeOfOperation) {
+   if(typeOfOperation==='add')
+  {
+    return {
+        barcode: $('#inputAddModalBarcode').val(),
+        quantity: Number.parseInt($('#inputAddModalQuantity').val()),
+    };
+  }
+  else
+  {
+    return {
+        barcode: $('#inputEditModalBarcode').val(),
+        quantity: Number.parseInt($('#inputEditModalQuantity').val()),
+      };
+  }
 }
 
 function addItem(item) {
@@ -57,19 +67,38 @@ function addItem(item) {
   }
 }
 
-function addOrderItem() {
-  const item = getCurrentOrderItem();
-  getProductByBarcode(item.barcode, (product) => {
-    addItem({
-      barcode: product.barcode,
-      name: product.name,
-      mrp: product.mrp,
-      quantity: item.quantity,
-    });
+function addOrderItem(typeOfOperation) {
+  const item = getCurrentOrderItem(typeOfOperation);
+//  console.log(item)
+  if(typeOfOperation==='add')
+  {
+    getProductByBarcode(item.barcode, (product) => {
+        addItem({
+          barcode: product.barcode,
+          name: product.name,
+          mrp: product.mrp,
+          quantity: item.quantity,
+        })
+         displayCreateOrderItems(orderItems);
+         resetAddItemForm();
+        }
 
-    displayCreateOrderItems(orderItems);
-    resetAddItemForm();
-  });
+        )
+    }
+    else
+    {
+        getProductByBarcode(item.barcode, (product) => {
+            addItem({
+              barcode: product.barcode,
+              name: product.name,
+              sellingPrice: product.mrp,
+              quantity: item.quantity,
+            })
+            displayEditOrderItems(orderItems)
+            resetEditItemForm();
+            });
+    }
+
 }
 
 function onQuantityChanged(barcode) {
@@ -83,6 +112,12 @@ function onQuantityChanged(barcode) {
 function displayCreateOrderItems(data) {
   const $tbody = $('#create-order-table').find('tbody');
   $tbody.empty();
+
+
+  console.log("from displayCreateOrderItems." )
+  console.log(data)
+
+
 
   for (let i in data) {
     const item = data[i];
@@ -101,7 +136,7 @@ function displayCreateOrderItems(data) {
             style="width:70%" min="1">
         </td>
         <td>
-          <button onclick="deleteOrderItem('${item.barcode}')" class="btn btn-outline-danger">Delete</button>
+          <button onclick="deleteOrderItem('${item.barcode}','add')" class="btn btn-outline-danger">Delete</button>
         </td>
       </tr>
     `;
@@ -110,16 +145,27 @@ function displayCreateOrderItems(data) {
   }
 }
 
-function deleteOrderItem(barcode) {
+function deleteOrderItem(barcode,typeOfOperation) {
   const index = orderItems.findIndex((it) => it.barcode === barcode);
   if (index == -1) return;
   orderItems.splice(index, 1);
-  displayCreateOrderItems(orderItems);
+  if(typeOfOperation==='edit')
+  {
+    displayEditOrderItems(orderItems);
+    displayEditOrderModal();
+  }
+  else
+  displayCreateOrderItems(orderItems)
 }
 
 function resetAddItemForm() {
-  $('#inputBarcode').val('');
-  $('#inputQuantity').val('');
+  $('#inputAddModalBarcode').val('');
+  $('#inputAddModalQuantity').val('');
+}
+
+function resetEditItemForm() {
+  $('#inputEditModalBarcode').val('');
+  $('#inputEditModalQuantity').val('');
 }
 
 function resetCreateModal() {
@@ -139,9 +185,13 @@ function displayOrderList(orders) {
             <td>${order.id}</td>
             <td>${order.datetime}</td>
             <td>
-                <button type="button" class="btn btn-outline-secondary" onclick="fetchOrderDetails(${order.id})">
+                <button type="button" class="btn btn-outline-secondary" onclick="fetchOrderDetails(${order.id},'add')">
                   Details
                 </button>
+
+                <button type="button" class="btn btn-outline-secondary" onclick="editOrderDetails(${order.id})">
+                                  Edit
+                                </button>
             </td>
         </tr>
     `;
@@ -149,16 +199,62 @@ function displayOrderList(orders) {
   });
 }
 
-function fetchOrderDetails(id) {
+
+function fetchOrderDetails(id,typeOfOperation) {
   var url = getOrderUrl() + id;
   $.ajax({
     url: url,
     type: 'GET',
     success: function (data) {
-      displayOrderDetails(data);
+        orderItems = data.items;
+       if(typeOfOperation==='add')
+       displayOrderDetails(data);
+       else
+       {
+            displayEditOrderItems(orderItems);
+            displayEditOrderModal()
+       }
     },
     error: handleAjaxError,
   });
+}
+function displayEditOrderModal(){
+    $('#edit-order-modal').modal({ backdrop: 'static', keyboard: false }, 'show');
+}
+function displayEditOrderItems(data){
+      //displayEditOrderModal();
+      const $tbody = $('#edit-order-table').find('tbody');
+      $tbody.empty();
+      const items = data;
+      console.log(items)
+
+        for (let i in items) {
+          const item = items[i];
+          console.log(item)
+
+          const row = `
+            <tr>
+              <td class="barcodeData">${item.barcode}</td>
+              <td>${item.name}</td>
+              <td >${item.sellingPrice}</td>
+              <td>
+                <input
+                    id="order-item-${item.barcode}"
+                    type="number"
+                    class="form-control"
+                    value="${item.quantity}"
+                    onchange="onQuantityChanged('${item.barcode}')"
+                    style="width:70%" min="1">
+              </td>
+              <td>
+                   <button onclick="deleteOrderItem('${item.barcode}','edit')" class="btn btn-outline-danger">Delete</button>
+              </td>
+
+            </tr>
+          `;
+
+          $tbody.append(row);
+        }
 }
 
 function resetUploadDialog() {
@@ -235,6 +331,10 @@ function displayCreationModal() {
 function hideCreationModal() {
   $('#create-order-modal').modal('toggle');
   getOrderList();
+}
+
+function editOrderDetails(id){
+    fetchOrderDetails(id,'edit');
 }
 
 //INITIALIZATION CODE

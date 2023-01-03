@@ -64,9 +64,6 @@ public class OrderDto {
             OrderItemPojo orderItemPojo = convert(orderItemForm, productPojo, orderPojo);
             orderItemService.add(orderItemPojo);
         }
-
-
-
     }
 
     private void reduceInventoryQuantity(List<OrderItemForm> orderItemForms, List<InventoryPojo> inventoryPojoList) throws ApiException {
@@ -150,5 +147,28 @@ public class OrderDto {
         }
         Collections.reverse(list2);
         return list2;
+    }
+
+    public void update(Integer id, List<OrderItemForm> orderItemForms) throws ApiException {
+        normalizeForm(orderItemForms);
+        validateForm(orderItemForms);
+
+        /*
+            1. Restore inventory to state before order was added
+            2. make orderItemChanges
+         */
+
+        List<ProductPojo> productPojoList = getProductsFromOrderItemFormList(orderItemForms);
+        updateInventoryChanges(id,productPojoList,orderItemForms);
+
+//        orderItemService.deleteByOrderId(id);
+
+
+
+    }
+
+    private void updateInventoryChanges(Integer orderId,List<ProductPojo> productPojoList,List<OrderItemForm> orderItemForms) throws ApiException {
+
+
     }
 }

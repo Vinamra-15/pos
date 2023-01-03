@@ -17,6 +17,14 @@ public class OrderItemService {
         return orderItemDao.selectByOrderId(id);
     }
 
+    public OrderItemPojo getByOrderIdProductId(Integer orderId, Integer productId) throws ApiException {
+        OrderItemPojo orderItemPojo = orderItemDao.selectByOrderIdProductId(orderId,productId);
+        if(orderItemPojo==null){
+            throw new ApiException("No order item for concerned orderId and productId exists!");
+        }
+        return orderItemPojo;
+    }
+
     public void add(OrderItemPojo orderItemPojo){
         orderItemDao.insert(orderItemPojo);
     }
