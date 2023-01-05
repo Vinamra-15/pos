@@ -71,7 +71,6 @@ function addItem(item) {
 
 function addOrderItem(typeOfOperation) {
   const item = getCurrentOrderItem(typeOfOperation);
-//  console.log(item)
   if(typeOfOperation==='add')
   {
     getProductByBarcode(item.barcode, (product) => {
@@ -115,12 +114,6 @@ function displayCreateOrderItems(data) {
   const $tbody = $('#create-order-table').find('tbody');
   $tbody.empty();
 
-
-  console.log("from displayCreateOrderItems." )
-  console.log(data)
-
-
-
   for (let i in data) {
     const item = data[i];
     const row = `
@@ -154,7 +147,6 @@ function deleteOrderItem(barcode,typeOfOperation) {
   if(typeOfOperation==='edit')
   {
     displayEditOrderItems(orderItems);
-    displayEditOrderModal();
   }
   else
   displayCreateOrderItems(orderItems)
@@ -234,6 +226,7 @@ function fetchOrderDetails(id,typeOfOperation) {
        displayOrderDetails(data);
        else
        {
+            $("#edit-item-form input[name=id]").val(data.id)
             displayEditOrderItems(orderItems);
             displayEditOrderModal()
        }
@@ -245,15 +238,13 @@ function displayEditOrderModal(){
     $('#edit-order-modal').modal({ backdrop: 'static', keyboard: false }, 'show');
 }
 function displayEditOrderItems(data){
-      //displayEditOrderModal();
+
       const $tbody = $('#edit-order-table').find('tbody');
       $tbody.empty();
       const items = data;
-      console.log(items)
-
-        for (let i in items) {
+      for (let i in items) {
           const item = items[i];
-          console.log(item)
+
 
           const row = `
             <tr class="text-center">
@@ -315,8 +306,8 @@ function displayOrderDetails(data) {
   displayOrderDetailsModal();
   const $time = $('#date-time')
   $time.text("Order placed on: " + datetime)
-  const $orderId = $('#order-id')
-  $orderId.text("Order Id: " + data.orderId)
+  const $id = $('#order-id')
+  $id.text("Order Id: " + data.id)
   const $tbody = $('#order-details-table').find('tbody');
   $tbody.empty();
   const items = data.items;
@@ -356,8 +347,19 @@ function hideCreationModal() {
   getOrderList();
 }
 
+function hideEditingModal() {
+  $('#edit-order-modal').modal('toggle');
+  getOrderList();
+}
+
+//function registerUpdateButton(id){
+//$('#update-order-btn').click(()=> updateOrder(id))
+//}
+
 function editOrderDetails(id){
+//    registerUpdateButton(id)
     fetchOrderDetails(id,'edit');
+
 }
 
 //INITIALIZATION CODE
@@ -367,7 +369,7 @@ function init() {
   $('#refresh-data').click(getOrderList);
   $('#upload-data').click(displayUploadData);
   $('#place-order-btn').click(placeNewOrder);
-
+  $('#update-order-btn').click(updateOrder);
 }
 
 $(document).ready(init);
@@ -404,5 +406,33 @@ function placeOrder(json, onSuccess) {
   });
 
   return false;
+}
+
+function updateOrder(){
+    const id = $("#edit-item-form input[name=id]").val();
+    const data = orderItems.map((it) => {
+        return {
+          barcode: it.barcode,
+          quantity: it.quantity,
+          sellingPrice:it.sellingPrice
+        };
+      });
+
+      const json = JSON.stringify(data);
+      const url = getOrderUrl() + id;
+
+        $.ajax({
+          url: url,
+          type: 'PUT',
+          data: json,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          success: hideEditingModal,
+          error: handleAjaxError,
+        });
+//        $('#update-order-btn').unbind('click')
+        return false;
+
 }
 

@@ -123,7 +123,7 @@
                             <label for="inputAddModalSellingPrice" class="col-sm-2 col-form-label">Selling Price</label>
                             <div class="col-sm-1">
                                 <input
-                                        type="text"
+                                        type="number"
                                         class="form-control"
                                         onchange="console.log('changed')"
                                         name="sellingPrice"
@@ -210,7 +210,7 @@
                         <label for="inputEditModalSellingPrice" class="col-sm-2 col-form-label">Selling Price</label>
                         <div class="col-sm-1">
                             <input
-                                    type="text"
+                                    type="number"
                                     class="form-control"
                                     onchange="console.log('changed')"
                                     name="sellingPrice"
@@ -218,9 +218,11 @@
                                     placeholder="Enter Selling Price"
                             />
                         </div>
+
                     </div>
 
                     <button class="btn btn-outline-primary px-4" type="button" onclick="addOrderItem('edit')">Add</button>
+                    <input type="hidden" name="id" >
                 </form>
 
                 <div class="row">&nbsp;</div>

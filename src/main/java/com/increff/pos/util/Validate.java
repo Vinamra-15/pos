@@ -45,11 +45,14 @@ public class Validate {
     }
 
     public static void validateForm(OrderItemForm orderItemForm) throws ApiException {
-        if(StringUtil.isEmpty(orderItemForm.getBarcode())||orderItemForm.getQuantity()==null) {
+        if(StringUtil.isEmpty(orderItemForm.getBarcode())||orderItemForm.getQuantity()==null||orderItemForm.getSellingPrice()==null) {
             throw new ApiException("Field(s) cannot be empty");
         }
         if(orderItemForm.getQuantity()<0){
             throw new ApiException("Quantity must be a non-negative number!");
+        }
+        if(orderItemForm.getSellingPrice()<0){
+            throw new ApiException("Selling Price must be a non-negative number!");
         }
     }
 }

@@ -25,6 +25,32 @@ public class OrderItemService {
         return orderItemPojo;
     }
 
+    public OrderItemPojo get(Integer id) throws ApiException {
+        OrderItemPojo orderItemPojo = orderItemDao.select(id);
+        if(orderItemPojo==null){
+            throw new ApiException("No order item for concerned orderId and productId exists!");
+        }
+        return orderItemPojo;
+    }
+
+    public void update(Integer id, OrderItemPojo orderItemPojo) throws ApiException{
+        OrderItemPojo exOrderItemPojo = orderItemDao.select(id);
+        if(exOrderItemPojo==null){
+            throw new ApiException("No order item for concerned orderId and productId exists!");
+        }
+        exOrderItemPojo.setQuantity(orderItemPojo.getQuantity());
+        exOrderItemPojo.setSellingPrice(orderItemPojo.getSellingPrice());
+        orderItemDao.update(exOrderItemPojo);
+    }
+
+    public void delete(Integer id) throws ApiException {
+        OrderItemPojo orderItemPojo = orderItemDao.select(id);
+        if(orderItemPojo==null){
+            throw new ApiException("No order item for concerned orderId and productId exists!");
+        }
+        orderItemDao.delete(id);
+    }
+
     public void add(OrderItemPojo orderItemPojo){
         orderItemDao.insert(orderItemPojo);
     }

@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 public class OrderDetailsData {
-    private Integer orderId;
+    private Integer id;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-YYYY hh:mm:ss", timezone = "UTC")
     private Date datetime;
     private List<OrderItemData> items;

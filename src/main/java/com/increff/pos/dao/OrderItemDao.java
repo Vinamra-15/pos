@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class OrderItemDao extends AbstractDao{
     private static String select_id = "select p from OrderItemPojo p where id=:id";
     private static String select_orderId = "select p from OrderItemPojo p where orderId=:orderId";
     private static String select_all = "select p from OrderItemPojo p";
+    private static String delete_id = "delete from OrderItemPojo p where id=:id";
 
     private static String select_orderId_productId = "select p from OrderItemPojo p where orderId=:orderId and productId=:productId";
 
@@ -48,6 +50,13 @@ public class OrderItemDao extends AbstractDao{
         return getSingle(query);
     }
 
+
+    public int delete(Integer id) {
+        Query query = em.createQuery(delete_id);
+        query.setParameter("id", id);
+        return query.executeUpdate();
+
+    }
 
     public void update(OrderItemPojo p) {
         em.merge(p);

@@ -14,17 +14,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.increff.pos.util.ConvertUtil.convert;
 import static com.increff.pos.util.Normalize.normalizeForm;
 import static com.increff.pos.util.Validate.validateForm;
 
 @Component
-@Transactional(rollbackFor = {ClassCastException.class, ApiException.class})
+@Transactional(rollbackFor = {ClassCastException.class, ApiException.class, Throwable.class})
 public class OrderDto {
 
     @Autowired
@@ -66,6 +63,7 @@ public class OrderDto {
         }
     }
 
+
     private void reduceInventoryQuantity(List<OrderItemForm> orderItemForms, List<InventoryPojo> inventoryPojoList) throws ApiException {
         for(int i=0;i<orderItemForms.size();i++){
             InventoryPojo inventoryPojo = inventoryPojoList.get(i);
@@ -103,7 +101,7 @@ public class OrderDto {
         List<ProductPojo> productPojos = getProductsFromOrderItemPojoList(orderItems);
         List<OrderItemData> orderItemDataList = getOrderItemDetailsList(orderItems,productPojos);
 
-        orderDetailsData.setOrderId(orderPojo.getId());
+        orderDetailsData.setId(orderPojo.getId());
         orderDetailsData.setDatetime(orderPojo.getDatetime());
         orderDetailsData.setItems(orderItemDataList);
         return orderDetailsData;
@@ -149,26 +147,84 @@ public class OrderDto {
         return list2;
     }
 
-    public void update(Integer id, List<OrderItemForm> orderItemForms) throws ApiException {
-        normalizeForm(orderItemForms);
-        validateForm(orderItemForms);
+    private boolean contains(List<OrderItemPojo> prevOrderItemPojos,OrderItemForm orderItemForm) throws ApiException {
+        for(OrderItemPojo prevPojo:prevOrderItemPojos){
+            ProductPojo productPojo = productService.get(prevPojo.getProductId());
+            if(Objects.equals(orderItemForm.getBarcode(), productPojo.getBarcode()))
+                return true;
+        }
+        return false;
+    }
+    public void update(Integer id, List<OrderItemForm> curOrderItemForms) throws ApiException {
+        normalizeForm(curOrderItemForms);
+        validateForm(curOrderItemForms);
+        List<OrderItemPojo> prevOrderItemPojos = orderItemService.getByOrderId(id);
 
-        /*
-            1. Restore inventory to state before order was added
-            2. make orderItemChanges
-         */
-
-        List<ProductPojo> productPojoList = getProductsFromOrderItemFormList(orderItemForms);
-        updateInventoryChanges(id,productPojoList,orderItemForms);
-
-//        orderItemService.deleteByOrderId(id);
+//        HashSet<OrderItemPojo> prevOrderItemPojoSet = new HashSet<OrderItemPojo>();
+//        for(OrderItemPojo orderItemPojo:prevOrderItemPojos){
+//            prevOrderItemPojoSet.add(orderItemPojo);
+//        }
 
 
+
+        for(OrderItemForm orderItemForm:curOrderItemForms){
+            if(contains(prevOrderItemPojos,orderItemForm)==false){
+                validateAndReduceInventoryQuantity(orderItemForm);
+                ProductPojo productPojo = productService.getByBarcode(orderItemForm.getBarcode());
+                OrderPojo orderPojo = orderService.get(id);
+                orderItemService.add(convert(orderItemForm,productPojo,orderPojo));
+
+            }
+            else
+            {
+                ProductPojo productPojo = productService.getByBarcode(orderItemForm.getBarcode());
+                OrderItemPojo prevOrderItemPojo = orderItemService.getByOrderIdProductId(id,productPojo.getId());
+                InventoryPojo inventoryPojo = inventoryService.get(productPojo.getId());
+
+                Integer newQuantity = inventoryPojo.getQuantity() + prevOrderItemPojo.getQuantity() - orderItemForm.getQuantity();
+                if(newQuantity<0){
+                    throw new ApiException("Insufficient Inventory for product with barcode: " + productPojo.getBarcode());
+                }
+                prevOrderItemPojo.setQuantity(orderItemForm.getQuantity());
+                prevOrderItemPojo.setSellingPrice(orderItemForm.getSellingPrice());
+                inventoryPojo.setQuantity(newQuantity);
+                inventoryService.update(productPojo.getId(),inventoryPojo);
+                orderItemService.update(prevOrderItemPojo.getId(),prevOrderItemPojo);
+                prevOrderItemPojos.remove(prevOrderItemPojo);
+            }
+        }
+        for(OrderItemPojo orderItemPojo:prevOrderItemPojos){
+            InventoryPojo inventoryPojo = inventoryService.get(orderItemPojo.getProductId());
+            Integer newQuantity = inventoryPojo.getQuantity() +  orderItemPojo.getQuantity();
+            inventoryPojo.setQuantity(newQuantity);
+            inventoryService.update(orderItemPojo.getProductId(),inventoryPojo);
+            orderItemService.delete(orderItemPojo.getId());
+        }
 
     }
 
-    private void updateInventoryChanges(Integer orderId,List<ProductPojo> productPojoList,List<OrderItemForm> orderItemForms) throws ApiException {
+    private void validateAndReduceInventoryQuantity(OrderItemForm orderItemForm) throws ApiException {
+        ProductPojo productPojo = productService.getByBarcode(orderItemForm.getBarcode());
+        InventoryPojo inventoryPojo = inventoryService.get(productPojo.getId());
 
-
+        if(orderItemForm.getQuantity()>inventoryPojo.getQuantity())
+        {
+            throw new ApiException("Insufficient Inventory for product with barcode: " + productPojo.getBarcode());
+        }
+        Integer newQuantity = inventoryPojo.getQuantity() - orderItemForm.getQuantity();
+        inventoryPojo.setQuantity(newQuantity);
+        inventoryService.update(productPojo.getId(),inventoryPojo);
     }
+
+    private List<OrderItemPojo> convertOrderItemFormsToOrderItemPojo(List<OrderItemForm> orderItemForms,Integer orderId) throws ApiException {
+        List<OrderItemPojo> list = new ArrayList<OrderItemPojo>();
+        OrderPojo orderPojo = orderService.get(orderId);
+        for(OrderItemForm orderItemForm:orderItemForms){
+            ProductPojo productPojo = productService.getByBarcode(orderItemForm.getBarcode());
+            OrderItemPojo orderItemPojo = convert(orderItemForm,productPojo,orderPojo);
+            list.add(orderItemPojo);
+        }
+        return list;
+    }
+
 }

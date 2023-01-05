@@ -4,6 +4,8 @@ import com.increff.pos.model.*;
 import com.increff.pos.pojo.*;
 import com.increff.pos.service.ApiException;
 
+import java.util.List;
+
 public class ConvertUtil {
     public static BrandCategoryData convert(BrandCategoryPojo brandCategoryPojo) {
         BrandCategoryData brandCategoryData = new BrandCategoryData();
@@ -71,6 +73,8 @@ public class ConvertUtil {
         orderItemPojo.setSellingPrice(orderItemForm.getSellingPrice());
         return orderItemPojo;
     }
+
+
 
     public static OrderData convert(OrderPojo orderPojo){
         OrderData orderData = new OrderData();

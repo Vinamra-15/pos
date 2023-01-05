@@ -21,4 +21,15 @@ public class OrderItemPojo {
     private Integer quantity;
     @Column(nullable = false)
     private Double sellingPrice;
+
+    @Override
+    public String toString() {
+        return "OrderItemPojo{" +
+                "id=" + id +
+                ", orderId=" + orderId +
+                ", productId=" + productId +
+                ", quantity=" + quantity +
+                ", sellingPrice=" + sellingPrice +
+                '}';
+    }
 }
