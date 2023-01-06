@@ -207,12 +207,42 @@ function displayOrderList(orders) {
                 <button type="button" class="btn btn-outline-secondary" onclick="editOrderDetails(${order.id})">
                                   Edit
                                 </button>
+                <button type="button" class="btn btn-outline-secondary downloadInvoiceBtn" onclick="downloadInvoice(${order.id})" disabled>
+                                                  Invoice
+                                                </button>
             </td>
         </tr>
     `;
     $tbody.append(row);
   });
+  setTimeout(() => {
+      const box = document.getElementsByClassName('downloadInvoiceBtn');
+      for(let i=0;i<box.length;++i){
+            box[i].disabled = false
+      }
+    }, 5000);
+
+
+
 }
+
+function downloadInvoice(id) {
+    var req = new XMLHttpRequest();
+    req.open("GET", `/pos/download/invoice/${id}`, true);
+    req.responseType = "blob";
+
+    req.onload = function (event) {
+      var blob = req.response;
+      console.log(blob.size);
+      var link=document.createElement('a');
+      link.href=window.URL.createObjectURL(blob);
+      link.download=`${id}.pdf`;
+      link.click();
+    };
+
+    req.send();
+}
+
 
 
 function fetchOrderDetails(id,typeOfOperation) {

@@ -12,7 +12,13 @@ import com.increff.pos.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import sun.misc.BASE64Decoder;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
 
@@ -35,7 +41,7 @@ public class OrderDto {
 
     @Autowired
     private InventoryService inventoryService;
-    public void createOrder(List<OrderItemForm> orderItemForms) throws ApiException {
+    public void createOrder(List<OrderItemForm> orderItemForms) throws ApiException, IOException {
         normalizeForm(orderItemForms);
         validateForm(orderItemForms);
         /*
@@ -61,6 +67,25 @@ public class OrderDto {
             OrderItemPojo orderItemPojo = convert(orderItemForm, productPojo, orderPojo);
             orderItemService.add(orderItemPojo);
         }
+        generatePDF(getOrderDetails(orderPojo.getId()));
+    }
+    private void generatePDF(OrderDetailsData orderDetailsData) throws IOException {
+        String encodedPdf = getEncodedPdf(orderDetailsData);
+        BASE64Decoder decoder = new BASE64Decoder();
+        byte[] decodedBytes = decoder.decodeBuffer(encodedPdf);
+
+        File file = new File("bills"+"/"+orderDetailsData.getId().toString() +".pdf");
+        FileOutputStream fop = new FileOutputStream(file);
+        fop.write(decodedBytes);
+        fop.flush();
+        fop.close();
+    }
+
+    private String getEncodedPdf(OrderDetailsData orderDetailsData){
+        RestTemplate restTemplate = new RestTemplate();
+        String invoiceAppUrl = "http://localhost:8000/invoice";
+        String response = restTemplate.postForObject(invoiceAppUrl + "/api/generate",orderDetailsData, String.class);
+        return response;
     }
 
 
@@ -155,7 +180,7 @@ public class OrderDto {
         }
         return false;
     }
-    public void update(Integer id, List<OrderItemForm> curOrderItemForms) throws ApiException {
+    public void update(Integer id, List<OrderItemForm> curOrderItemForms) throws ApiException, IOException {
         normalizeForm(curOrderItemForms);
         validateForm(curOrderItemForms);
         List<OrderItemPojo> prevOrderItemPojos = orderItemService.getByOrderId(id);
@@ -200,6 +225,8 @@ public class OrderDto {
             inventoryService.update(orderItemPojo.getProductId(),inventoryPojo);
             orderItemService.delete(orderItemPojo.getId());
         }
+        OrderPojo orderPojo = orderService.get(id);
+        generatePDF(getOrderDetails(orderPojo.getId()));
 
     }
 

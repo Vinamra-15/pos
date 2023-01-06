@@ -8,8 +8,12 @@ import com.increff.pos.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -22,7 +26,7 @@ public class OrderApiController {
 
     @ApiOperation(value = "Adds an order")
     @RequestMapping(path = "/api/orders",method = RequestMethod.POST)
-    public void add(@RequestBody List<OrderItemForm> orderItemForms) throws ApiException {
+    public void add(@RequestBody List<OrderItemForm> orderItemForms) throws ApiException, IOException {
         orderDto.createOrder(orderItemForms);
     }
 
@@ -40,9 +44,26 @@ public class OrderApiController {
 
     @ApiOperation(value = "Updates an order")
     @RequestMapping(path = "/api/orders/{id}",method = RequestMethod.PUT)
-    public void getOrderDetails(@PathVariable Integer id, @RequestBody List<OrderItemForm> orderItemForms) throws ApiException {
+    public void getOrderDetails(@PathVariable Integer id, @RequestBody List<OrderItemForm> orderItemForms) throws ApiException, IOException {
         orderDto.update(id,orderItemForms);
     }
+
+//    @ApiOperation(value = "Gets order invoice")
+//    @RequestMapping(path = "/api/orders/invoice",method = RequestMethod.GET)
+//    public String getInvoiceDetails() throws ApiException {
+//        OrderDetailsData orderDetailsData = orderDto.getOrderDetails(52);
+//        String request = orderDetailsData.getDatetime().toString();
+//        RestTemplate restTemplate = new RestTemplate();
+//        String fooResourceUrl = "http://localhost:8000/invoice";
+////        System.out.println(request);
+//        String response = restTemplate.postForObject(fooResourceUrl + "/api/about",request, String.class);
+//
+//        return response;
+//    }
+
+
+
+
 
 
 
