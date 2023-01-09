@@ -301,6 +301,14 @@ function displayEditOrderItems(data){
         }
 }
 
+function onQuantityChanged(barcode) {
+  const index = orderItems.findIndex((it) => it.barcode === barcode);
+  if (index == -1) return;
+
+  const newQuantity = $(`#order-item-${barcode}`).val();
+  orderItems[index].quantity = Number.parseInt(newQuantity);
+}
+
 function resetUploadDialog() {
   //Reset file name
   var $file = $('#orderFile');
