@@ -23,9 +23,6 @@ import io.swagger.annotations.ApiOperation;
 public class BrandCategoryApiController {
 
 	@Autowired
-	private BrandCategoryService service;
-
-	@Autowired
 	private BrandCategoryDto dto;
 
 	@ApiOperation(value = "Adds a brand")

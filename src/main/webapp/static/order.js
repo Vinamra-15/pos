@@ -254,7 +254,7 @@ function downloadInvoice(invoicePath) {
           }
           else
           {
-            alert("Invoice is being generated!")
+//            alert("Invoice is being generated!")
           }
 
         }

@@ -32,6 +32,18 @@ public class BrandCategoryService {
 		return dao.selectAll();
 	}
 
+	public List<BrandCategoryPojo> getByBrand(String brand) {
+		return dao.selectByBrand(brand);
+	}
+
+	public List<BrandCategoryPojo> getByCategory(String category) {
+		return dao.selectByCategory(category);
+	}
+
+	public BrandCategoryPojo getByBrandCategory(String brand,String category) {
+		return dao.select(brand,category);
+	}
+
 	public void update(Integer id, BrandCategoryPojo p) throws ApiException {
 		if(checkBrandCatDuplicateExists(p.getBrand(),p.getCategory())){
 			throw new ApiException("Brand: " + p.getBrand() + " in the category: " + p.getCategory() + " already exists.");
