@@ -29,5 +29,11 @@ public class OrderService {
         orderDao.insert(orderPojo);
     }
 
+    public void update(Integer id, OrderPojo orderPojo) throws ApiException {
+        OrderPojo ex = get(id);
+        ex.setInvoicePath(orderPojo.getInvoicePath());
+        orderDao.update(ex);
+    }
+
 
 }

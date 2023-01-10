@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.nio.file.Path;
 import java.util.Date;
 
 @Getter
@@ -16,4 +17,6 @@ public class OrderPojo {
     private Integer id;
     @Temporal(TemporalType.TIMESTAMP)
     private Date datetime;
+
+    private String invoicePath;
 }

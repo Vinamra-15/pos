@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.*;
 
@@ -41,10 +43,7 @@ public class OrderDto {
 
     @Autowired
     private InventoryService inventoryService;
-    public void createOrder(List<OrderItemForm> orderItemForms) throws ApiException, IOException {
-        normalizeForm(orderItemForms);
-        validateForm(orderItemForms);
-        /*
+    /*
             1. productPojo(fetch product pojo from each orderItemForm's barcode)
             2.For each productPojo since barcode existence is already checked, compare and reduce inventory quantity
                 i. reduceInventoryQuantity(orderItemPojo,productPojo)
@@ -53,6 +52,10 @@ public class OrderDto {
             4. get time and set in orderPojo
             5. save orderPojo in order table
          */
+    public void createOrder(List<OrderItemForm> orderItemForms) throws ApiException, IOException {
+        normalizeForm(orderItemForms);
+        validateForm(orderItemForms);
+
         List<ProductPojo> productPojoList = getProductsFromOrderItemFormList(orderItemForms);
         List<InventoryPojo> inventoryPojoList = getInventoryFromProducts(productPojoList);
         validateInventoryQuantity(orderItemForms,productPojoList,inventoryPojoList);
@@ -60,6 +63,7 @@ public class OrderDto {
 
         OrderPojo orderPojo = new OrderPojo();
         orderPojo.setDatetime(Date.from(Instant.now()));
+        orderPojo.setInvoicePath(null);
         orderService.add(orderPojo);
 
         for(OrderItemForm orderItemForm:orderItemForms){
@@ -67,18 +71,23 @@ public class OrderDto {
             OrderItemPojo orderItemPojo = convert(orderItemForm, productPojo, orderPojo);
             orderItemService.add(orderItemPojo);
         }
-        generatePDF(getOrderDetails(orderPojo.getId()));
+        String invoicePath = generatePDF(getOrderDetails(orderPojo.getId()));
+//        System.out.println(invoicePath);
+        orderPojo.setInvoicePath(invoicePath);
+        orderService.update(orderPojo.getId(),orderPojo);
+
     }
-    private void generatePDF(OrderDetailsData orderDetailsData) throws IOException {
+    private String generatePDF(OrderDetailsData orderDetailsData) throws IOException {
         String encodedPdf = getEncodedPdf(orderDetailsData);
         BASE64Decoder decoder = new BASE64Decoder();
         byte[] decodedBytes = decoder.decodeBuffer(encodedPdf);
-
-        File file = new File("bills"+"/"+orderDetailsData.getId().toString() +".pdf");
+        String filePath = "bills" + "/" + orderDetailsData.getId().toString() + ".pdf";
+        File file = new File(filePath);
         FileOutputStream fop = new FileOutputStream(file);
         fop.write(decodedBytes);
         fop.flush();
         fop.close();
+        return filePath;
     }
 
     private String getEncodedPdf(OrderDetailsData orderDetailsData){
@@ -226,7 +235,10 @@ public class OrderDto {
             orderItemService.delete(orderItemPojo.getId());
         }
         OrderPojo orderPojo = orderService.get(id);
-        generatePDF(getOrderDetails(orderPojo.getId()));
+        String invoicePath = generatePDF(getOrderDetails(orderPojo.getId()));
+//        System.out.println(invoicePath);
+        orderPojo.setInvoicePath(invoicePath);
+        orderService.update(orderPojo.getId(),orderPojo);
 
     }
 

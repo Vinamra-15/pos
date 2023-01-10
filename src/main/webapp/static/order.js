@@ -102,13 +102,6 @@ function addOrderItem(typeOfOperation) {
 
 }
 
-function onQuantityChanged(barcode) {
-  const index = orderItems.findIndex((it) => it.barcode === barcode);
-  if (index == -1) return;
-
-  const newQuantity = $(`#order-item-${barcode}`).val();
-  orderItems[index].quantity = Number.parseInt(newQuantity);
-}
 
 function displayCreateOrderItems(data) {
   const $tbody = $('#create-order-table').find('tbody');
@@ -195,6 +188,8 @@ function displayOrderList(orders) {
 
   orders.forEach((order) => {
     //billAmount = getBillAmount(order.id)
+    let invoicePath = order.invoicePath.toString().split('.')[0].split('/')[1]
+
     var row = `
         <tr class="text-center">
             <td>${order.id}</td>
@@ -207,7 +202,7 @@ function displayOrderList(orders) {
                 <button type="button" class="btn btn-outline-secondary" onclick="editOrderDetails(${order.id})">
                                   Edit
                                 </button>
-                <button type="button" class="btn btn-outline-secondary downloadInvoiceBtn" onclick="downloadInvoice(${order.id})" disabled>
+                <button type="button" class="btn btn-outline-secondary downloadInvoiceBtn" id="invoiceBtn-${invoicePath}" onclick="downloadInvoice(${invoicePath})">
                                                   Invoice
                                                 </button>
             </td>
@@ -215,33 +210,99 @@ function displayOrderList(orders) {
     `;
     $tbody.append(row);
   });
-  setTimeout(() => {
-      const box = document.getElementsByClassName('downloadInvoiceBtn');
-      for(let i=0;i<box.length;++i){
-            box[i].disabled = false
-      }
-    }, 5000);
+
 
 
 
 }
+//function saveByteArray(reportName, byte) {
+//    var blob = new Blob([byte], {type: "application/pdf"});
+//    var link = document.createElement('a');
+//    link.href = window.URL.createObjectURL(blob);
+//    var fileName = reportName;
+//    link.download = fileName;
+//    link.click();
+//};
+//function base64ToArrayBuffer(base64) {
+//    var binaryString = window.atob(base64);
+//    var binaryLen = binaryString.length;
+//    var bytes = new Uint8Array(binaryLen);
+//    for (var i = 0; i < binaryLen; i++) {
+//       var ascii = binaryString.charCodeAt(i);
+//       bytes[i] = ascii;
+//    }
+//    return bytes;
+// }
 
-function downloadInvoice(id) {
-    var req = new XMLHttpRequest();
-    req.open("GET", `/pos/download/invoice/${id}`, true);
+function downloadInvoice(invoicePath) {
+    let req = new XMLHttpRequest();
+    req.open("GET", `/pos/download/invoice/${invoicePath}`, true);
     req.responseType = "blob";
+//    console.log(invoicePath)
 
-    req.onload = function (event) {
-      var blob = req.response;
-      console.log(blob.size);
-      var link=document.createElement('a');
-      link.href=window.URL.createObjectURL(blob);
-      link.download=`${id}.pdf`;
-      link.click();
-    };
+    req.onreadystatechange = () => { // Call a function when the state changes.
 
-    req.send();
+          if (req.readyState === XMLHttpRequest.DONE && req.status === 200) {
+
+          let blob = req.response;
+//          console.log(blob.size);
+          let link=document.createElement('a');
+          link.href=window.URL.createObjectURL(blob);
+          link.download=`${invoicePath}.pdf`;
+          link.click();
+            // Request finished. Do processing here.
+          }
+          else
+          {
+            alert("Invoice is being generated!")
+          }
+
+        }
+
+//    req.onload = function (event) {
+//      let blob = req.response;
+//      console.log(blob.size);
+//      let link=document.createElement('a');
+//      link.href=window.URL.createObjectURL(blob);
+//      link.download=`${invoicePath}.pdf`;
+//      link.click();
+//    };
+//    req.onerror = function(event){
+//        handleAjaxError();
+//    }
+    req.send()
+
+//    const url = `/pos/download/invoice/${invoicePath}`
+//        $.ajax({
+//            url: url,
+//            type: 'GET',
+//            success: function (data) {
+//                console.log(data)
+//            var bytes = new Uint8Array(data); // pass your byte response to this constructor
+//
+//            var blob=new Blob([bytes], {type: "application/pdf"});// change resultByte to bytes
+//
+//            var link=document.createElement('a');
+//            link.href=window.URL.createObjectURL(blob);
+//            link.download="myFileName.pdf";
+//            link.click();
+////                var sampleArr = base64ToArrayBuffer(data);
+////                saveByteArray("Sample Report", sampleArr);
+//              // sum data items
+////              data.responseType = "blob"
+////              let blob = data.response
+////
+////              let link=document.createElement('a');
+////              link.href=window.URL.createObjectURL(data);
+////              link.download=`${invoicePath}.pdf`;
+////              link.click();
+//            },
+//            error: handleAjaxError,
+//          });
+
+
 }
+
 
 
 
@@ -271,9 +332,9 @@ function displayEditOrderItems(data){
 
       const $tbody = $('#edit-order-table').find('tbody');
       $tbody.empty();
-      const items = data;
-      for (let i in items) {
-          const item = items[i];
+
+      for (var i in data) {
+          var item = data[i];
 
 
           const row = `
@@ -286,8 +347,8 @@ function displayEditOrderItems(data){
                     id="order-item-${item.barcode}"
                     type="number"
                     class="form-control"
-                    value="${item.quantity}"
-                    onchange="onQuantityChanged('${item.barcode}')"
+                    value = "${item.quantity}"
+                    onchange="onQuantityChanged('${item.barcode}',event)"
                     style="width:70%" min="1">
               </td>
               <td>
@@ -298,16 +359,23 @@ function displayEditOrderItems(data){
           `;
 
           $tbody.append(row);
+
+
         }
 }
 
-function onQuantityChanged(barcode) {
+function onQuantityChanged(barcode,event) {
+//    console.log(event)
   const index = orderItems.findIndex((it) => it.barcode === barcode);
   if (index == -1) return;
 
-  const newQuantity = $(`#order-item-${barcode}`).val();
+//$(`#order-item-${barcode}`)
+  const newQuantity = event.target.value
   orderItems[index].quantity = Number.parseInt(newQuantity);
 }
+
+
+
 
 function resetUploadDialog() {
   //Reset file name

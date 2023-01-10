@@ -80,6 +80,7 @@ public class ConvertUtil {
         OrderData orderData = new OrderData();
         orderData.setId(orderPojo.getId());
         orderData.setDatetime(orderPojo.getDatetime());
+        orderData.setInvoicePath(orderPojo.getInvoicePath());
         return orderData;
     }
 }
