@@ -1,6 +1,7 @@
 package com.increff.pos.controller;
 
 import com.increff.pos.dto.ReportDto;
+import com.increff.pos.model.InventoryReportData;
 import com.increff.pos.model.ProductForm;
 import com.increff.pos.model.SalesReportData;
 import com.increff.pos.model.SalesReportForm;
@@ -24,5 +25,11 @@ public class ReportApiController {
     @RequestMapping(path = "/api/reports/sales", method = RequestMethod.POST)
     public List<SalesReportData> get(@RequestBody SalesReportForm form) throws ApiException {
         return dto.getSalesReport(form);
+    }
+
+    @ApiOperation(value = "Get inventory Report")
+    @RequestMapping(path = "/api/reports/inventory", method = RequestMethod.GET)
+    public List<InventoryReportData> get() throws ApiException{
+        return dto.getInventoryReport();
     }
 }

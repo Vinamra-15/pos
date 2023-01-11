@@ -1,12 +1,15 @@
 package com.increff.pos.util;
 
-import com.increff.pos.model.BrandCategoryForm;
-import com.increff.pos.model.InventoryForm;
-import com.increff.pos.model.OrderItemForm;
-import com.increff.pos.model.ProductForm;
+import com.increff.pos.model.*;
 import com.increff.pos.service.ApiException;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+
+import static com.increff.pos.util.TimeUtil.getEndOfDay;
+import static com.increff.pos.util.TimeUtil.getStartOfDay;
 
 public class Validate {
     public static void validateForm(BrandCategoryForm brandCategoryForm) throws ApiException {
@@ -54,5 +57,18 @@ public class Validate {
         if(orderItemForm.getSellingPrice()<0){
             throw new ApiException("Selling Price must be a non-negative number!");
         }
+    }
+
+    public static void validate(SalesReportForm salesReportForm) {
+        salesReportForm.setBrand(StringUtil.toLowerCase(salesReportForm.getBrand()));
+        salesReportForm.setCategory(StringUtil.toLowerCase(salesReportForm.getCategory()));
+        if(salesReportForm.getEndDate()==null) {
+            salesReportForm.setEndDate(new Date());
+        }
+        if(salesReportForm.getStartDate()==null) {
+            salesReportForm.setStartDate(new GregorianCalendar(2021, Calendar.JANUARY, 1).getTime());
+        }
+        salesReportForm.setStartDate(getStartOfDay(salesReportForm.getStartDate(),Calendar.getInstance()));
+        salesReportForm.setEndDate(getEndOfDay(salesReportForm.getEndDate(),Calendar.getInstance()));
     }
 }

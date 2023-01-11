@@ -40,8 +40,11 @@ public class BrandCategoryService {
 		return dao.selectByCategory(category);
 	}
 
-	public BrandCategoryPojo getByBrandCategory(String brand,String category) {
-		return dao.select(brand,category);
+	public BrandCategoryPojo getByBrandCategory(String brand,String category) throws ApiException {
+		BrandCategoryPojo brandCategoryPojo = dao.select(brand,category);
+		if(brandCategoryPojo==null)
+			throw new ApiException("Brand: "+brand+" in category: "+category+" does not exist");
+		return brandCategoryPojo;
 	}
 
 	public void update(Integer id, BrandCategoryPojo p) throws ApiException {

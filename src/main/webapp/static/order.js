@@ -120,7 +120,7 @@ function displayCreateOrderItems(data) {
             type="number"
             class="form-control"
             value="${item.quantity}"
-            onchange="onQuantityChanged('${item.barcode}')"
+            onchange="onQuantityChanged('${item.barcode}',event)"
             style="width:70%" min="1">
         </td>
         <td>
