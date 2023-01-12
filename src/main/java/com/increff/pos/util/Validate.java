@@ -71,4 +71,14 @@ public class Validate {
         salesReportForm.setStartDate(getStartOfDay(salesReportForm.getStartDate(),Calendar.getInstance()));
         salesReportForm.setEndDate(getEndOfDay(salesReportForm.getEndDate(),Calendar.getInstance()));
     }
+
+    public static void validateForm(SignUpForm signUpForm) throws ApiException {
+        if(signUpForm.getEmail()==null||signUpForm.getPassword()==null||signUpForm.getConfirmPassword()==null){
+            throw new ApiException("Field(s) cannot be empty!");
+        }
+        if(!signUpForm.getPassword().equals(signUpForm.getConfirmPassword())){
+            throw new ApiException("Passwords do not match!");
+        }
+
+    }
 }

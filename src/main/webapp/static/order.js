@@ -163,23 +163,23 @@ function resetCreateModal() {
   displayCreateOrderItems(orderItems);
 }
 
-function getBillAmount(id){
-    const url = getOrderUrl + id;
-    $.ajax({
-        url: url,
-        type: 'GET',
-        success: function (data) {
-          // sum data items
-          let amount = 0;
-          for(let i in data.items){
-            amount = amount + i.sellingPrice
-          }
-          return amount
-        },
-        error: handleAjaxError,
-      });
-
-}
+//function getBillAmount(id){
+//    const url = getOrderUrl + id;
+//    $.ajax({
+//        url: url,
+//        type: 'GET',
+//        success: function (data) {
+//          // sum data items
+//          let amount = 0;
+//          for(let i in data.items){
+//            amount = amount + i.sellingPrice
+//          }
+//          return amount
+//        },
+//        error: handleAjaxError,
+//      });
+//
+//}
 
 
 function displayOrderList(orders) {
@@ -188,7 +188,7 @@ function displayOrderList(orders) {
 
   orders.forEach((order) => {
     //billAmount = getBillAmount(order.id)
-    let invoicePath = order.invoicePath.toString().split('.')[0].split('/')[1]
+//    let invoicePath = order.invoicePath.toString().split('.')[0].split('/')[1]
 
     var row = `
         <tr class="text-center">
@@ -202,7 +202,7 @@ function displayOrderList(orders) {
                 <button type="button" class="btn btn-outline-secondary" onclick="editOrderDetails(${order.id})">
                                   Edit
                                 </button>
-                <button type="button" class="btn btn-outline-secondary downloadInvoiceBtn" id="invoiceBtn-${invoicePath}" onclick="downloadInvoice(${invoicePath})">
+                <button type="button" class="btn btn-outline-secondary downloadInvoiceBtn" id="invoiceBtn-${order.id}" onclick="downloadInvoice(${order.id})">
                                                   Invoice
                                                 </button>
             </td>
@@ -234,9 +234,9 @@ function displayOrderList(orders) {
 //    return bytes;
 // }
 
-function downloadInvoice(invoicePath) {
+function downloadInvoice(orderId) {
     let req = new XMLHttpRequest();
-    req.open("GET", `/pos/download/invoice/${invoicePath}`, true);
+    req.open("GET", `/pos/download/invoice/${orderId}`, true);
     req.responseType = "blob";
 //    console.log(invoicePath)
 
@@ -248,16 +248,18 @@ function downloadInvoice(invoicePath) {
 //          console.log(blob.size);
           let link=document.createElement('a');
           link.href=window.URL.createObjectURL(blob);
-          link.download=`${invoicePath}.pdf`;
+          link.download=`${orderId}.pdf`;
           link.click();
+          $.notify("Invoice Generated for order: " + orderId,"success");
             // Request finished. Do processing here.
           }
           else
           {
-//            alert("Invoice is being generated!")
+            $.notify("Invoice Generation in progress!","warning");
           }
 
         }
+        req.send()
 
 //    req.onload = function (event) {
 //      let blob = req.response;
@@ -270,7 +272,7 @@ function downloadInvoice(invoicePath) {
 //    req.onerror = function(event){
 //        handleAjaxError();
 //    }
-    req.send()
+
 
 //    const url = `/pos/download/invoice/${invoicePath}`
 //        $.ajax({
@@ -302,9 +304,6 @@ function downloadInvoice(invoicePath) {
 
 
 }
-
-
-
 
 function fetchOrderDetails(id,typeOfOperation) {
   var url = getOrderUrl() + id;
@@ -417,9 +416,10 @@ function displayOrderDetails(data) {
   const $tbody = $('#order-details-table').find('tbody');
   $tbody.empty();
   const items = data.items;
-
+  let billAmount = 0;
     for (let i in items) {
       const item = items[i];
+      billAmount+=item.sellingPrice*item.quantity;
       const row = `
         <tr class="text-center">
           <td>${item.barcode}</td>
@@ -431,6 +431,16 @@ function displayOrderDetails(data) {
 
       $tbody.append(row);
     }
+    const row = `
+            <tr class="text-light bg-dark">
+                <td>Bill Amount: </td>
+                <td></td>
+               <td></td>
+              <td>${billAmount}</td>
+            </tr>
+          `;
+    $tbody.append(row);
+
 }
 
 function displayOrderDetailsModal(){
@@ -507,7 +517,10 @@ function placeOrder(json, onSuccess) {
     headers: {
       'Content-Type': 'application/json',
     },
-    success: onSuccess,
+    success: function(){
+        onSuccess()
+        $.notify("Order placed successfully!","success");
+    },
     error: handleAjaxError,
   });
 
@@ -534,7 +547,10 @@ function updateOrder(){
           headers: {
             'Content-Type': 'application/json',
           },
-          success: hideEditingModal,
+          success: function(){
+            hideEditingModal()
+            $.notify("Order Update successful!","success");
+          },
           error: handleAjaxError,
         });
 //        $('#update-order-btn').unbind('click')

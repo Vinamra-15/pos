@@ -23,6 +23,7 @@ function addBrandCategory(event){
        },	   
 	   success: function(response) {
 	   		getBrandCategoryList();
+	   		$.notify(JSON.parse(json).brand + " in category: "+JSON.parse(json).category + " added successfully!","success");
 	   },
 	   error: handleAjaxError
 	});
@@ -49,6 +50,7 @@ function updateBrandCategory(event){
        },	   
 	   success: function(response) {
 	   		getBrandCategoryList();
+	   		$.notify("Edit successful!","success");
 	   },
 	   error: handleAjaxError
 	});

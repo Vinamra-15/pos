@@ -42,6 +42,6 @@ public class UserService {
 
 	protected static void normalize(UserPojo p) {
 		p.setEmail(p.getEmail().toLowerCase().trim());
-		p.setRole(p.getRole().toLowerCase().trim());
+//		p.setRole(p.getRole().toLowerCase().trim());
 	}
 }

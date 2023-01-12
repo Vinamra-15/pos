@@ -1,4 +1,4 @@
-    function getInventoryUrl(){
+function getInventoryUrl(){
    var baseUrl = $("meta[name=baseUrl]").attr("content")
    return baseUrl + "/api/inventory";
 }
@@ -21,6 +21,7 @@ function updateInventory(event){
        },
       success: function(response) {
              getInventoryList();
+             $.notify("Inventory update successful for product: " + JSON.parse(json).barcode,"success");
       },
       error: handleAjaxError
    });

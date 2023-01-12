@@ -7,7 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.increff.pos.dto.UserDto;
+import com.increff.pos.model.SignUpForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,35 +31,31 @@ import com.increff.pos.util.UserPrincipal;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.increff.pos.util.ConvertUtil.convert;
+
 @Controller
 public class LoginController {
-
 	@Autowired
-	private UserService service;
-	@Autowired
-	private InfoData info;
+	private UserDto userDto;
 
 	@ApiOperation(value = "Logs in a user")
 	@RequestMapping(path = "/session/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public ModelAndView login(HttpServletRequest req, LoginForm f) throws ApiException {
-		UserPojo p = service.get(f.getEmail());
-		boolean authenticated = (p != null && Objects.equals(p.getPassword(), f.getPassword()));
+	public ModelAndView login(HttpServletRequest req, LoginForm loginForm) throws ApiException {
+		boolean authenticated = userDto.login(req,loginForm);
 		if (!authenticated) {
-			info.setMessage("Invalid username or password");
 			return new ModelAndView("redirect:/site/login");
 		}
-
-		// Create authentication object
-		Authentication authentication = convert(p);
-		// Create new session
-		HttpSession session = req.getSession(true);
-		// Attach Spring SecurityContext to this new session
-		SecurityUtil.createContext(session);
-		// Attach Authentication object to the Security Context
-		SecurityUtil.setAuthentication(authentication);
-
 		return new ModelAndView("redirect:/ui/home");
+	}
 
+	@ApiOperation(value = "Signs up a user")
+	@RequestMapping(path = "/session/signup", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public ModelAndView signUp(HttpServletRequest req, SignUpForm signUpForm) throws ApiException {
+		boolean signedUp = userDto.signUp(req,signUpForm);
+		if(!signedUp){
+			return new ModelAndView("redirect:/site/signup");
+		}
+		return new ModelAndView("redirect:/ui/home");
 	}
 
 	@RequestMapping(path = "/session/logout", method = RequestMethod.GET)
@@ -64,21 +64,6 @@ public class LoginController {
 		return new ModelAndView("redirect:/site/logout");
 	}
 
-	private static Authentication convert(UserPojo p) {
-		// Create principal
-		UserPrincipal principal = new UserPrincipal();
-		principal.setEmail(p.getEmail());
-		principal.setId(p.getId());
 
-		// Create Authorities
-		ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		authorities.add(new SimpleGrantedAuthority(p.getRole()));
-		// you can add more roles if required
-
-		// Create Authentication
-		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, null,
-				authorities);
-		return token;
-	}
 
 }

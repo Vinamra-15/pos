@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,8 @@ public class AdminApiController {
 
 	@Autowired
 	private UserService service;
+
+
 
 	@ApiOperation(value = "Adds a user")
 	@RequestMapping(path = "/api/admin/user", method = RequestMethod.POST)

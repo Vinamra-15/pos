@@ -3,10 +3,18 @@ package com.increff.pos.util;
 import com.increff.pos.model.*;
 import com.increff.pos.pojo.*;
 import com.increff.pos.service.ApiException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConvertUtil {
+
     public static BrandCategoryData convert(BrandCategoryPojo brandCategoryPojo) {
         BrandCategoryData brandCategoryData = new BrandCategoryData();
         brandCategoryData.setCategory(brandCategoryPojo.getCategory());
@@ -82,5 +90,48 @@ public class ConvertUtil {
         orderData.setDatetime(orderPojo.getDatetime());
         orderData.setInvoicePath(orderPojo.getInvoicePath());
         return orderData;
+    }
+
+    public static List<DaySalesData> convert(List<DaySalesPojo> daySalesPojoList){
+        List<DaySalesData> daySalesDataList = new ArrayList<DaySalesData>();
+        for(DaySalesPojo daySalesPojo:daySalesPojoList){
+            DaySalesData daySalesData = new DaySalesData();
+            daySalesData.setDate(daySalesPojo.getDate());
+            daySalesData.setInvoiced_items_count(daySalesPojo.getInvoiced_items_count());
+            daySalesData.setInvoiced_orders_count(daySalesPojo.getInvoiced_orders_count());
+            daySalesData.setTotal_revenue(daySalesPojo.getTotal_revenue());
+            daySalesDataList.add(daySalesData);
+        }
+
+        return daySalesDataList;
+    }
+
+    public static UserPojo convert(SignUpForm signUpForm){
+        UserPojo userPojo = new UserPojo();
+        userPojo.setEmail(signUpForm.getEmail());
+        userPojo.setPassword(signUpForm.getPassword());
+        return userPojo;
+    }
+
+    public static Authentication convert(UserPojo p,String adminEmail) {
+        // Create principal
+        UserPrincipal principal = new UserPrincipal();
+        principal.setEmail(p.getEmail());
+        principal.setId(p.getId());
+
+        // Create Authorities
+        ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+
+        if(adminEmail.equals(p.getEmail()))
+        authorities.add(new SimpleGrantedAuthority("supervisor"));
+        else{
+            authorities.add(new SimpleGrantedAuthority("operator"));
+        }
+        // you can add more roles if required
+
+        // Create Authentication
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, null,
+                authorities);
+        return token;
     }
 }

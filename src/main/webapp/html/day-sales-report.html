@@ -9,21 +9,25 @@
 <nav th:replace="snippets.html :: name_app_navbar"></nav>
 
 <div class="container mt-4">
+    <h1>Daily Sales Report</h1>
 
-    <h3>Brand Report</h3>
+
 
     <!-- Blank Row -->
     <div class="row">
         &nbsp;
     </div>
     <div class="row">
+
         <!-- Table -->
         <div class="col-12">
-            <table class="table table-bordered table-striped" id="brandCategory-table">
-                <thead>
-                <tr class="text-center">
-                    <th scope="col">Brand</th>
-                    <th scope="col">Category</th>
+            <table class="table table-bordered table-striped" id="daily-sales-table">
+                <thead class="text-center">
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Invoiced Orders Count</th>
+                    <th scope="col">Invoiced Items Count</th>
+                    <th scope="col">Total Revenue</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -37,8 +41,7 @@
 
 <footer th:replace="snippets.html :: name_footer"></footer>
 
-<script th:src="@{/static/brand-report.js}" />
-</script>
+<script th:src="@{/static/day-sales-report.js}"/></script>
 
 </body>
 
