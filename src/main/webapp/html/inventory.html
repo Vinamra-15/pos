@@ -31,13 +31,13 @@
 		<!-- Table -->
 		<div class="col-12">
 			<table class="table table-bordered table-striped" id="inventory-table">
-				<thead>
+				<thead class="thead-dark">
 				<tr class="text-center">
 					<th scope="col">Barcode</th>
 					<th scope="col">Product Name</th>
 					<th scope="col">Quantity</th>
 					<!--                    <th scope="col">Brand Name</th>-->
-					<th scope="col">Actions</th>
+					<th scope="col" th:if="${info.getRole() == 'supervisor'}">Actions</th>
 				</tr>
 				</thead>
 				<tbody class="text-center">

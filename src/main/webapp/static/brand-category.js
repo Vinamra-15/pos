@@ -5,6 +5,11 @@ function getBrandCategoryUrl(){
 	return baseUrl + "/api/brands";
 }
 
+function getRole(){
+    var role = $("meta[name=role]").attr("content")
+    return role;
+}
+
 //BUTTON ACTIONS
 function addBrandCategory(event){
 	//Set the values to update
@@ -149,12 +154,20 @@ function displayBrandCategoryList(data){
 		//console.log(e);
 		//var buttonHtml = '<button onclick="deleteBrand(' + e.id + ')">delete</button>'
 		var buttonHtml = ' <button type="button" class="btn btn-outline-secondary" onclick="displayEditBrandCategory(' + e.id + ')">Edit</button>'
-		var row = '<tr class="text-center">'
+		if(getRole()==="supervisor")
+		{var row = '<tr class="text-center">'
 		+ '<td class="text-center">' + e.brand + '</td>'
 		+ '<td class="text-center">'  + e.category + '</td>'
 		+ '<td class="text-center">' + buttonHtml + '</td>'
 		+ '</tr>';
-        $tbody.append(row);
+        $tbody.append(row);}
+        else{
+            var row = '<tr class="text-center">'
+            		+ '<td class="text-center">' + e.brand + '</td>'
+            		+ '<td class="text-center">'  + e.category + '</td>'
+            		+ '</tr>';
+            $tbody.append(row);
+        }
 	}
 }
 

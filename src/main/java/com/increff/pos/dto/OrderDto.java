@@ -14,7 +14,6 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,10 +30,8 @@ import static com.increff.pos.util.Validate.validateForm;
 @Component
 @Transactional(rollbackFor = {ClassCastException.class, ApiException.class, Throwable.class})
 public class OrderDto {
-
     @Autowired
     private OrderService orderService;
-
     @Autowired
     private OrderItemService orderItemService;
     @Autowired
@@ -223,16 +220,4 @@ public class OrderDto {
         inventoryPojo.setQuantity(newQuantity);
         inventoryService.update(productPojo.getId(),inventoryPojo);
     }
-
-//    private List<OrderItemPojo> convertOrderItemFormsToOrderItemPojo(List<OrderItemForm> orderItemForms,Integer orderId) throws ApiException {
-//        List<OrderItemPojo> list = new ArrayList<OrderItemPojo>();
-//        OrderPojo orderPojo = orderService.get(orderId);
-//        for(OrderItemForm orderItemForm:orderItemForms){
-//            ProductPojo productPojo = productService.getByBarcode(orderItemForm.getBarcode());
-//            OrderItemPojo orderItemPojo = convert(orderItemForm,productPojo,orderPojo);
-//            list.add(orderItemPojo);
-//        }
-//        return list;
-//    }
-
 }

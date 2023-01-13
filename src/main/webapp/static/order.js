@@ -432,7 +432,7 @@ function displayOrderDetails(data) {
       $tbody.append(row);
     }
     const row = `
-            <tr class="text-light bg-dark">
+            <tr>
                 <td>Bill Amount: </td>
                 <td></td>
                <td></td>

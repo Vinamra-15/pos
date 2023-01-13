@@ -31,7 +31,6 @@ public class InventoryDto {
         InventoryPojo inventoryPojo = inventoryService.get(productPojo.getId());
         return convert(inventoryPojo,productPojo);
     }
-
     public List<InventoryData> getAll() throws ApiException {
         List<InventoryPojo> list = inventoryService.getAll();
         List<InventoryData> list2 = new ArrayList<InventoryData>();
@@ -39,12 +38,8 @@ public class InventoryDto {
             ProductPojo productPojo = productService.get(inventoryPojo.getProductId());
             list2.add(convert(inventoryPojo,productPojo));
         }
-
-        Collections.reverse(list2);
-
         return list2;
     }
-
     public void update(String barcode, InventoryForm inventoryForm) throws ApiException {
         try{
             validateForm(inventoryForm);
@@ -57,17 +52,5 @@ public class InventoryDto {
         {
             throw new ApiException(e.toString());
         }
-
     }
-
-
-
-
-
-
-
-
-
-
-
 }

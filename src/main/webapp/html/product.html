@@ -15,7 +15,7 @@
  <!-- Top row with form-->
  <div class="row">
 	 <h3 class="column">Products</h3>
-	 <div class="col d-flex justify-content-end" float="left">
+	 <div class="col d-flex justify-content-end" float="left" th:if="${info.getRole() == 'supervisor'}">
 			  <button type="button" class="btn btn-primary" onclick="displayAddProductModal()">Add</button>
 			  &nbsp;
 			  <button type="button" class="btn btn-primary" id="refresh-data">Refresh</button>
@@ -88,14 +88,14 @@
  <!-- Table -->
  <div class="col-12">
 	<table class="table table-bordered table-striped" id="product-table">
-	  <thead>
+	  <thead class="thead-dark">
 	    <tr class="text-center">
 			<th scope="col">Barcode</th>
 			<th scope="col">Product Name</th>
 	      <th scope="col">Brand</th>
 			<th scope="col">Category</th>
 			<th scope="col">MRP</th>
-	      <th scope="col">Actions</th>
+	      <th scope="col" th:if="${info.getRole() == 'supervisor'}">Actions</th>
 	    </tr>
 	  </thead>
 	  <tbody class="text-center">

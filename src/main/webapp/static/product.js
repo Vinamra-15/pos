@@ -4,6 +4,11 @@ function getProductUrl(){
 	return baseUrl + "/api/products";
 }
 
+function getRole(){
+    var role = $("meta[name=role]").attr("content")
+    return role;
+}
+
 //BUTTON ACTIONS
 function addProduct(event){
 	//Set the values to update
@@ -21,6 +26,7 @@ function addProduct(event){
        },	   
 	   success: function(response) {
 	   		getProductList();
+	   		$.notify("Product added successfully!","success");
 	   },
 	   error: handleAjaxError
 	});
@@ -47,6 +53,7 @@ function updateProduct(event){
        },	   
 	   success: function(response) {
 	   		getProductList();
+	   		$.notify("Product update successful for product: " + JSON.parse(json).barcode,"success");
 	   },
 	   error: handleAjaxError
 	});
@@ -143,15 +150,29 @@ function displayProductList(data){
 	for(var i in data){
 		var e = data[i];
 		var buttonHtml = ' <button type="button" class="btn btn-outline-secondary"  onclick="displayEditProduct(' + e.id + ')">Edit</button>'
-		var row = '<tr class="text-center">'
-		+ '<td>' + e.barcode + '</td>'
-		+ '<td>' + e.name + '</td>'
-		+ '<td>' + e.brand + '</td>'
-		+ '<td>'  + e.category + '</td>'
-		+ '<td>' + e.mrp + '</td>'
-		+ '<td>' + buttonHtml + '</td>'
-		+ '</tr>';
-        $tbody.append(row);
+		if(getRole()==="supervisor")
+        {
+            var row = '<tr class="text-center">'
+            + '<td>' + e.barcode + '</td>'
+            + '<td>' + e.name + '</td>'
+            + '<td>' + e.brand + '</td>'
+            + '<td>'  + e.category + '</td>'
+            + '<td>' + e.mrp + '</td>'
+            + '<td>' + buttonHtml + '</td>'
+            + '</tr>';
+            $tbody.append(row);
+        }
+        else
+        {
+            var row = '<tr class="text-center">'
+                        + '<td>' + e.barcode + '</td>'
+                        + '<td>' + e.name + '</td>'
+                        + '<td>' + e.brand + '</td>'
+                        + '<td>'  + e.category + '</td>'
+                        + '<td>' + e.mrp + '</td>'
+                        + '</tr>';
+            $tbody.append(row);
+        }
 	}
 }
 
@@ -166,6 +187,10 @@ function displayEditProduct(id){
 	   error: handleAjaxError
 	});	
 }
+
+//function handleAjaxError(e){
+//    $.notify("Cannot perform operation!","error");
+//}
 
 function resetUploadDialog(){
 	//Reset file name

@@ -3,6 +3,11 @@ function getInventoryUrl(){
    return baseUrl + "/api/inventory";
 }
 
+function getRole(){
+    var role = $("meta[name=role]").attr("content")
+    return role;
+}
+
 
 function updateInventory(event){
    $('#edit-inventory-modal').modal('toggle');
@@ -106,14 +111,27 @@ function displayInventoryList(data){
    $tbody.empty();
    for(var i in data){
       var e = data[i];
-      var buttonHtml = ' <button type="button" class="btn btn-outline-secondary" onclick="displayEditInventory(\'' + e.barcode + '\')">Edit</button>'
-      var row = '<tr class="text-center">'
-      + '<td>' + e.barcode + '</td>'
-      + '<td>' + e.productName + '</td>'
-      + '<td>'  + e.quantity + '</td>'
-      + '<td>' + buttonHtml + '</td>'
-      + '</tr>';
-        $tbody.append(row);
+      if(getRole()==="supervisor")
+      {
+          var buttonHtml = ' <button type="button" class="btn btn-outline-secondary" onclick="displayEditInventory(\'' + e.barcode + '\')">Edit</button>'
+          var row = '<tr class="text-center">'
+          + '<td>' + e.barcode + '</td>'
+          + '<td>' + e.productName + '</td>'
+          + '<td>'  + e.quantity + '</td>'
+          + '<td>' + buttonHtml + '</td>'
+          + '</tr>';
+            $tbody.append(row);
+      }
+      else
+      {
+        var row = '<tr class="text-center">'
+                  + '<td>' + e.barcode + '</td>'
+                  + '<td>' + e.productName + '</td>'
+                  + '<td>'  + e.quantity + '</td>'
+                  + '</tr>';
+                    $tbody.append(row);
+      }
+
    }
 }
 

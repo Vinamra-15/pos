@@ -24,38 +24,13 @@ public class ReportDto {
     private OrderService orderService;
     @Autowired
     private OrderItemService orderItemService;
-
     @Autowired
     private ProductService productService;
-
     @Autowired
     private InventoryService inventoryService;
-
     @Autowired
     private ReportService reportService;
 
-    private List<SalesReportData> getSalesReportData(List<BrandCategoryPojo> brandCategoryPojos,
-                                                     List<OrderItemPojo> orderItemPojos) throws ApiException {
-        List<SalesReportData> salesReportDataList = new ArrayList<SalesReportData>();
-        for(BrandCategoryPojo brandCategoryPojo:brandCategoryPojos){
-            SalesReportData salesReportData = new SalesReportData();
-            salesReportData.setCategory(brandCategoryPojo.getCategory());
-            salesReportData.setBrand(brandCategoryPojo.getBrand());
-            Integer quantity = 0;
-            Double revenue = 0.0;
-            for(OrderItemPojo orderItemPojo:orderItemPojos){
-                ProductPojo productPojo = productService.get(orderItemPojo.getProductId());
-                if(productPojo.getBrandId()==brandCategoryPojo.getId()){
-                    quantity += orderItemPojo.getQuantity();
-                    revenue += (orderItemPojo.getQuantity())*(orderItemPojo.getSellingPrice());
-                }
-            }
-            salesReportData.setQuantity(quantity);
-            salesReportData.setRevenue(revenue);
-            salesReportDataList.add(salesReportData);
-        }
-        return salesReportDataList;
-    }
     public List<SalesReportData> getSalesReport(SalesReportForm salesReportForm) throws ApiException {
         validate(salesReportForm);
         Date startDate = salesReportForm.getStartDate();
@@ -129,7 +104,7 @@ public class ReportDto {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE,-1);
         Date yesterday = TimeUtil.getStartOfDay(calendar.getTime(),calendar);
-        System.out.println("From: " + yesterday.toString() + "\nTo: " + new Date().toString());
+//        System.out.println("From: " + yesterday.toString() + "\nTo: " + new Date().toString());
 
         List<OrderPojo> orderPojoList = orderService.getByStartDateEndDate(yesterday, new Date());
         List<OrderItemPojo> orderItemPojoList = new ArrayList<OrderItemPojo>();
@@ -153,6 +128,29 @@ public class ReportDto {
 
     public List<DaySalesData> getDaySalesReport(){
         return convert(reportService.getDaySales());
+    }
+
+    private List<SalesReportData> getSalesReportData(List<BrandCategoryPojo> brandCategoryPojos,
+                                                     List<OrderItemPojo> orderItemPojos) throws ApiException {
+        List<SalesReportData> salesReportDataList = new ArrayList<SalesReportData>();
+        for(BrandCategoryPojo brandCategoryPojo:brandCategoryPojos){
+            SalesReportData salesReportData = new SalesReportData();
+            salesReportData.setCategory(brandCategoryPojo.getCategory());
+            salesReportData.setBrand(brandCategoryPojo.getBrand());
+            Integer quantity = 0;
+            Double revenue = 0.0;
+            for(OrderItemPojo orderItemPojo:orderItemPojos){
+                ProductPojo productPojo = productService.get(orderItemPojo.getProductId());
+                if(productPojo.getBrandId()==brandCategoryPojo.getId()){
+                    quantity += orderItemPojo.getQuantity();
+                    revenue += (orderItemPojo.getQuantity())*(orderItemPojo.getSellingPrice());
+                }
+            }
+            salesReportData.setQuantity(quantity);
+            salesReportData.setRevenue(revenue);
+            salesReportDataList.add(salesReportData);
+        }
+        return salesReportDataList;
     }
 
 }

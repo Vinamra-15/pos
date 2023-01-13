@@ -38,15 +38,11 @@ public class ProductDto {
         ProductPojo productPojo = ConvertUtil.convert(productForm, brandCategoryPojo);
         productService.add(productPojo);
 
-        //Throw custom error to verify whether the process is transactional or not.
-        //productService.getCheck(1111);
-
         //For every new added product, initialize its quantity in Inventory to Zero.
         InventoryPojo inventoryPojo = new InventoryPojo();
         inventoryPojo.setProductId(productPojo.getId());
         inventoryPojo.setQuantity(0);
         inventoryService.add(inventoryPojo);
-
     }
 
     public ProductData get(Integer id) throws ApiException {
@@ -68,9 +64,7 @@ public class ProductDto {
             BrandCategoryPojo brandCategoryPojo = brandCategoryService.get(productPojo.getBrandId());
             list2.add(convert(productPojo, brandCategoryPojo));
         }
-        Collections.reverse(list2);
         return list2;
-
     }
 
     public void update(Integer id, ProductForm productForm) throws ApiException {

@@ -16,12 +16,10 @@ import static com.increff.pos.util.ConvertUtil.convert;
 
 @Component
 public class OrderItemDto {
-
     @Autowired
     private OrderItemService orderItemService;
     @Autowired
     private ProductService productService;
-
     public List<OrderItemData> get(Integer id) throws ApiException {
         List<OrderItemPojo> list = orderItemService.getByOrderId(id);
         List<OrderItemData> list2 = new ArrayList<OrderItemData>();
@@ -31,12 +29,9 @@ public class OrderItemDto {
         }
         return list2;
     }
-
     public OrderItemData getByOrderIdProductId(Integer orderId, Integer productId) throws ApiException {
         OrderItemPojo orderItemPojo = orderItemService.getByOrderIdProductId(orderId,productId);
         ProductPojo productPojo = productService.get(productId);
         return convert(orderItemPojo,productPojo);
     }
-
-
 }
