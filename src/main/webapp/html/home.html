@@ -10,16 +10,25 @@
 
 <div class="container">
 
-	<h3>Home</h3>
 
 	 <!-- Top row with form-->
-	<div class="row">
-		 <div class="col-2">
-			<a th:href="@{/ui/brands}" title="Employees"> <i class="fas fa-users"></i> </a>
+	<div class="row m-3">
+		 <div class="col-4" style="text-align:center;">
+			<a th:href="@{/ui/brands}" title="Brands"> <img style="width:10rem ;height:15rem ;padding-bottom:4rem;" th:src="@{/static/brands_icon.png}"/> </a>
 		 </div>
-		 <div class="col-2">
-			<a th:href="@{/ui/admin}" title="Supervisor"> <i class="fas fa-cog"></i> </a>
-		 </div>
+		<div class="col-4" style="text-align:center;">
+			<a th:href="@{/ui/products}" title="Products"> <img style="width:10rem ;height:15rem ;padding-bottom:4rem;" th:src="@{/static/products_icon.png}"/> </a>
+		</div>
+		<div class="col-4" style="text-align:center;">
+			<a th:href="@{/ui/products}" title="Orders"> <img style="width:10rem ;height:15rem ;padding-bottom:4rem;" th:src="@{/static/orders_icon.jpg}"/> </a>
+		</div>
+		<div class="col-6" style="text-align:center;">
+			<a th:href="@{/ui/inventory}" title="Inventory"> <img style="width:10rem ;height:15rem ;padding-bottom:4rem;" th:src="@{/static/inventory_icon.png}"/> </a>
+		</div>
+		<div class="col-6" style="text-align:center;">
+			<a th:href="@{/ui/inventory}" title="Reports"> <img style="width:10rem ;height:11rem ;padding-bottom:0rem;" th:src="@{/static/report_icon.png}"/> </a>
+		</div>
+
 	</div>
 
 

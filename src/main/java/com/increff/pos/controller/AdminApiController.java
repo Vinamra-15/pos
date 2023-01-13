@@ -21,6 +21,8 @@ import com.increff.pos.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+import static com.increff.pos.util.ConvertUtil.convert;
+
 @Api
 @RestController
 public class AdminApiController {
@@ -54,20 +56,6 @@ public class AdminApiController {
 		return list2;
 	}
 
-	private static UserData convert(UserPojo p) {
-		UserData d = new UserData();
-		d.setEmail(p.getEmail());
-		d.setRole(p.getRole());
-		d.setId(p.getId());
-		return d;
-	}
 
-	private static UserPojo convert(UserForm f) {
-		UserPojo p = new UserPojo();
-		p.setEmail(f.getEmail());
-		p.setRole(f.getRole());
-		p.setPassword(f.getPassword());
-		return p;
-	}
 
 }

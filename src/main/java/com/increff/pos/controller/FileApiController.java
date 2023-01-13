@@ -37,72 +37,11 @@ public class FileApiController {
     private OrderDto orderDto;
     @RequestMapping(path = "/download/invoice/{orderId}", method = RequestMethod.GET)
     public Resource download(@PathVariable Integer orderId) throws ApiException {
-        try {
-
+        try{
               return orderDto.getFileResource(orderId);
-//            System.out.println(billDirPath);
-//            HttpHeaders header = new HttpHeaders();
-//            header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=invoice.pdf");
-//            header.add("Cache-Control", "no-cache, no-store, must-revalidate");
-//            header.add("Pragma", "no-cache");
-//            header.add("Expires", "0");
-
-
-//            System.out.println(resource.contentLength());
-
-//            return ResponseEntity.ok()
-//                    .headers(header)
-//                    .contentLength(file.length())
-//                    .contentType(MediaType.parseMediaType("application/pdf"))
-//                    .body(resource);
-
         }
         catch (IOException exception){
             throw new ApiException("Pdf being generated!");
         }
     }
-//@GetMapping(
-//        produces = MediaType.APPLICATION_PDF_VALUE
-//)
-//@RequestMapping(path = "/download/invoice/{invoicePath}", method = RequestMethod.GET)
-//public @ResponseBody byte[] download(@PathVariable String invoicePath) throws ApiException {
-//    try {
-//
-//        String billDirPath = System.getProperty("user.dir") + File.separator + "bills" + File.separator + invoicePath + ".pdf";
-//        File file = new File(billDirPath);
-//        FileInputStream fl = new FileInputStream(file);
-//        byte[] arr = new byte[(int)file.length()];
-//        fl.read(arr);
-//        fl.close();
-//        return arr;
-//
-////
-////        System.out.println("mai upar se print hota h");
-////        File file = new File(billDirPath);
-////        return file;
-////        System.out.println("maine bhi print hona h");
-////        System.out.println(billDirPath);
-////        HttpHeaders header = new HttpHeaders();
-////        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=invoice.pdf");
-////        header.add("Cache-Control", "no-cache, no-store, must-revalidate");
-////        header.add("Pragma", "no-cache");
-////        header.add("Expires", "0");
-////
-////        Path path = Paths.get(file.getAbsolutePath());
-////        byte[] resource= Files.readAllBytes(path);
-////        System.out.println("Maine prinr hona haldsfjsoiaj;mdpi");
-//////        System.out.println(resource.contentLength());
-////
-////        try {
-////            return new SerialBlob(resource);
-////        } catch (SQLException e) {
-////            throw new ApiException("difficult converting resource to blob");
-////        }
-////
-//    }
-//    catch (Exception exception){
-//        System.out.println(exception);
-//        throw new ApiException("Pdf being generated");
-//    }
-//}
 }

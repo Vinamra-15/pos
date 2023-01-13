@@ -47,24 +47,4 @@ public class OrderApiController {
     public void getOrderDetails(@PathVariable Integer id, @RequestBody List<OrderItemForm> orderItemForms) throws ApiException, IOException {
         orderDto.update(id,orderItemForms);
     }
-
-//    @ApiOperation(value = "Gets order invoice")
-//    @RequestMapping(path = "/api/orders/invoice",method = RequestMethod.GET)
-//    public String getInvoiceDetails() throws ApiException {
-//        OrderDetailsData orderDetailsData = orderDto.getOrderDetails(52);
-//        String request = orderDetailsData.getDatetime().toString();
-//        RestTemplate restTemplate = new RestTemplate();
-//        String fooResourceUrl = "http://localhost:8000/invoice";
-////        System.out.println(request);
-//        String response = restTemplate.postForObject(fooResourceUrl + "/api/about",request, String.class);
-//
-//        return response;
-//    }
-
-
-
-
-
-
-
 }
